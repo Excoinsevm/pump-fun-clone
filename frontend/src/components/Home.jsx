@@ -21,9 +21,10 @@ const App = () => {
     const fetchMemeTokens = async () => {
       try {
         const eventFilter = factoryContract.filters.TokenCreated();
+        const latestBlock = await provider.getBlockNumber();
         let events = await factoryContract.queryFilter(
           eventFilter,
-          1,
+          latestBlock - 5000,
           "latest"
         );
 
