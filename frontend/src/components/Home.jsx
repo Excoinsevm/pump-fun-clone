@@ -8,6 +8,22 @@ import CONFIG from "../config";
 import { useEthersSigner } from "../ethers";
 import { useAccount } from "wagmi";
 
+const CardSkeleton = () => (
+  <div className="card skeleton">
+    <div className="card-content">
+      <div className="skeleton-image"></div>
+      <div className="skeleton-text">
+        <div className="skeleton-line"></div>
+        <div className="skeleton-line"></div>
+        <div className="skeleton-line"></div>
+        <div className="skeleton-line"></div>
+        <div className="skeleton-line"></div>
+        <div className="skeleton-line"></div>
+      </div>
+    </div>
+  </div>
+);
+
 const App = () => {
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,9 +37,12 @@ const App = () => {
     abi,
     signer
   );
+  const [sortOption, setSortOption] = useState("featured");
+  const [showSortDropdown, setShowSortDropdown] = useState(false);
 
   useEffect(() => {
     const fetchMemeTokens = async () => {
+      setLoading(true);
       try {
         const eventFilter = factoryContract.filters.TokenCreated();
         const latestBlock = provider.getBlockNumber();
@@ -105,33 +124,42 @@ const App = () => {
         >
           [start a new coin]
         </h3>
-        <img
-          src="https://pump.fun/_next/image?url=%2Fking-of-the-hill.png&w=256&q=75"
-          alt="Start a new coin"
-          className="start-new-image"
-        />
+        {cards.length > 0 ? (
+          <>
+            <img
+              src="https://pump.fun/_next/image?url=%2Fking-of-the-hill.png&w=256&q=75"
+              alt="Start a new coin"
+              className="start-new-image"
+            />
 
-        {cards.length > 0 && (
-          <div
-            className="card main-card"
-            onClick={() => navigateToTokenDetail(cards[0])}
-          >
-            <div className="card-content">
-              <img
-                src={cards[0].tokenImageUrl}
-                alt={cards[0].name}
-                className="card-image"
-              />
-              <div className="card-text">
-                <h2>Created by {cards[0].creatorAddress}</h2>
-                <p>Funding Raised: {cards[0].fundingRaised} ETH</p>
-                <p>
-                  {cards[0].name} (ticker: {cards[0].symbol})
-                </p>
-                <p>{cards[0].description}</p>
+            <div
+              className="card main-card"
+              onClick={() => navigateToTokenDetail(cards[0])}
+            >
+              <div className="card-content">
+                <img
+                  src={cards[0].tokenImageUrl}
+                  alt={cards[0].name}
+                  className="card-image"
+                />
+                <div className="card-text">
+                  <h2>Created by {cards[0].creatorAddress}</h2>
+                  <p>Funding Raised: {cards[0].fundingRaised} ETH</p>
+                  <p>
+                    {cards[0].name} (ticker: {cards[0].symbol})
+                  </p>
+                  <p>{cards[0].description}</p>
+                </div>
               </div>
             </div>
-          </div>
+          </>
+        ) : (
+          <>
+            <div className="start-new-image-skeleton"></div>
+            <div className="main-card">
+              <CardSkeleton />
+            </div>
+          </>
         )}
 
         <div className="search-container">
@@ -147,11 +175,65 @@ const App = () => {
           </button>
         </div>
 
-        <h4 style={{ textAlign: "left", color: "rgb(134, 239, 172)" }}>
-          Terminal
-        </h4>
+        <div className="sort-container">
+          <div
+            className="sort-dropdown"
+            onClick={() => setShowSortDropdown(!showSortDropdown)}
+          >
+            <span className="sort-text">
+              sort: {sortOption} {sortOption === "featured" && "🔥"}
+            </span>
+            <span className="dropdown-arrow">▼</span>
+          </div>
+
+          {showSortDropdown && (
+            <div className="sort-options">
+              <div
+                className={`sort-option ${
+                  sortOption === "featured" ? "active" : ""
+                }`}
+                onClick={() => {
+                  setSortOption("featured");
+                  setShowSortDropdown(false);
+                }}
+              >
+                featured 🔥
+              </div>
+              <div
+                className={`sort-option ${
+                  sortOption === "newest" ? "active" : ""
+                }`}
+                onClick={() => {
+                  setSortOption("newest");
+                  setShowSortDropdown(false);
+                }}
+              >
+                newest
+              </div>
+              <div
+                className={`sort-option ${
+                  sortOption === "oldest" ? "active" : ""
+                }`}
+                onClick={() => {
+                  setSortOption("oldest");
+                  setShowSortDropdown(false);
+                }}
+              >
+                oldest
+              </div>
+            </div>
+          )}
+        </div>
+
         {loading ? (
-          <p>Loading...</p>
+          <div className="card-list">
+            <CardSkeleton />
+            <CardSkeleton />
+            <CardSkeleton />
+            <CardSkeleton />
+            <CardSkeleton />
+            <CardSkeleton />
+          </div>
         ) : (
           <div className="card-list">
             {cards.slice(1).map((card, index) => (

@@ -6,6 +6,7 @@ import { abi } from "./abi";
 import { ethers } from "ethers";
 import CONFIG from "../config";
 import { useEthersSigner } from "../ethers";
+import upload from "./upload.svg";
 
 const TokenCreate = () => {
   const [name, setName] = useState("");
@@ -135,7 +136,7 @@ const TokenCreate = () => {
             onDrop={handleDrop}
           >
             <div className="file-drop-content">
-              <span className="upload-icon">↑</span>
+              <span className="upload-icon"><img src={upload} alt="Logo" /></span>
               <p>drag and drop an image or video</p>
               <input
                 type="file"
@@ -195,7 +196,7 @@ const TokenCreate = () => {
             create coin
           </button>
           <p className="info-text">
-            when your coin completes its bonding curve you receive 0.5 SOL
+            when your coin completes its bonding curve you receive 0.1 ETH
           </p>
         </div>
       </div>

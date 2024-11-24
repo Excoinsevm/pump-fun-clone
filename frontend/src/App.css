@@ -50,9 +50,19 @@
   width: 180px;
 }
 
+.start-new-image-skeleton {
+  width: 200px;
+  height: 35px;
+  border-radius: 4px;
+  margin: 6px 0;
+  animation: pulse 1.5s infinite;
+  background: rgb(51 65 85);
+}
+
 .main-card {
   margin-bottom: 10px;
   margin-top: none;
+  width: 400px;
 }
 
 .card-list {
@@ -68,7 +78,7 @@
 
 .card {
   padding: 20px;
-  display: flex;
+  /* display: flex; */
   align-items: center;
   height: 100px; /* Increased height for vertical size */
   cursor: pointer; /* Make cursor a pointer to indicate it's clickable */
@@ -81,8 +91,8 @@
 
 .card-content {
   display: flex;
-  align-items: center;
-  height: 100%; /* Ensure content fills card height */
+  flex-direction: row;
+  gap: 4px;
 }
 
 .card-image {
@@ -111,6 +121,7 @@
   display: flex;
   align-items: center;
   margin-bottom: 20px;
+  margin-top: 20px;
 }
 
 .search-input {
@@ -671,6 +682,7 @@ textarea.input-field {
 .upload-icon {
   font-size: 24px;
   margin-bottom: 10px;
+  fill: white;
 }
 
 .select-file-button {
@@ -745,4 +757,132 @@ textarea.input-field {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.skeleton {
+  border-radius: 8px;
+  overflow: hidden;
+  animation: pulse 2s cubic-bezier(.4,0,.6,1) infinite;
+  
+}
+
+.skeleton-image {
+  width: 100px;
+  height: 100px;
+  background: #2a2a2a;
+  border-radius: 4px;
+  margin-right: 16px;
+  background-color: rgb(51 65 85);
+}
+
+.skeleton-text {
+  flex: 1 1 0%;
+  width: 100%;
+}
+
+.skeleton-line {
+  height: 10px;
+  border-radius: 4px;
+  margin: 6px 0;
+  animation: pulse 1.5s infinite;
+  background: rgb(51 65 85);
+}
+
+.skeleton-line:nth-child(1) {
+  width: 60%;
+}
+
+.skeleton-line:nth-child(2) {
+  width: 40%;
+}
+
+.skeleton-line:nth-child(3) {
+  width: 35%;
+}
+
+.skeleton-line:nth-child(4) {
+  width: 90%;
+}
+
+.skeleton-line:nth-child(5) {
+  width: 70%;
+}
+
+.skeleton-line:nth-child(6) {
+  width: 65%;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+.sort-container {
+  position: relative;
+  margin: 20px 0;
+}
+
+.sort-dropdown {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: rgb(134, 239, 172);
+  border-radius: 10px;
+  cursor: pointer;
+  color: black;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.sort-dropdown:hover {
+  background-color: rgb(110, 220, 150);
+}
+
+.sort-text {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dropdown-arrow {
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+.sort-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 8px;
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 4px;
+  min-width: 150px;
+  z-index: 10;
+}
+
+.sort-option {
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  color: white;
+  transition: background-color 0.2s ease;
+}
+
+.sort-option:hover {
+  background-color: #333;
+}
+
+.sort-option.active {
+  background-color: rgb(134, 239, 172);
+  color: black;
 }
