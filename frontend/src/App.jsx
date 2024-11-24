@@ -7,6 +7,7 @@ import { WagmiProvider } from "wagmi";
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { injected } from "wagmi/connectors";
+import CONFIG from "./config";
 
 const projectId = "4265189f60ad0e1a606df6152e4e2ca0";
 
@@ -17,7 +18,7 @@ const config = createConfig(
     connectors: [injected()],
     transports: {
       // RPC URL for each chain
-      [sepolia.id]: http("https://ethereum-sepolia-rpc.publicnode.com"),
+      [sepolia.id]: http(CONFIG.RPC_URL),
     },
     // Required API Keys
     walletConnectProjectId: projectId,

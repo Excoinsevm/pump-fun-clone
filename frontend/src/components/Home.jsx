@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../App.css";
 import { useNavigate } from "react-router-dom";
-import NavBar from "./NavBar.jsx";
 import { ethers } from "ethers";
 import { abi } from "./abi";
 import CONFIG from "../config";
