@@ -34,7 +34,7 @@ const App = () => {
   const factoryContract = new ethers.Contract(
     CONFIG.CONTRACT_ADDRESS,
     abi,
-    signer
+    provider
   );
   const [sortOption, setSortOption] = useState("featured");
   const [showSortDropdown, setShowSortDropdown] = useState(false);
@@ -61,7 +61,6 @@ const App = () => {
             };
           })
         );
-        console.log(tokens);
 
         setCards(
           tokens.map((token) => ({
