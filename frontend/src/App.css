@@ -194,10 +194,10 @@
 
 .card-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   gap: 20px; /* Space between cards */
   width: 100%;
-  max-width: 1200px; /* Adjust this to fit your design */
+  /* max-width: 1200px; */
   margin: 0 auto; /* Center the card list */
 }
 
@@ -205,11 +205,14 @@
 
 .card {
   padding: 20px;
-  /* display: flex; */
-  align-items: center;
-  height: 100px; /* Increased height for vertical size */
-  cursor: pointer; /* Make cursor a pointer to indicate it's clickable */
-  transition: border 0.3s; /* Smooth transition for the hover effect */
+  background-color: rgb(30, 32, 45);
+  border-radius: 8px;
+  border: 1px solid rgba(134, 239, 172, 0.2);
+  cursor: pointer;
+  transition: border 0.3s;
+  height: auto; /* Remove fixed height */
+  max-height: 200px; /* Add max height */
+  overflow: hidden; /* Hide overflow content */
 }
 
 .card:hover {
@@ -219,29 +222,59 @@
 .card-content {
   display: flex;
   flex-direction: row;
-  gap: 4px;
+  gap: 15px;
+  height: 100%;
 }
 
 .card-image {
   width: 80px;
   height: 80px;
-  margin-right: 15px; /* Increased margin for better spacing */
+  min-width: 80px; /* Prevent image from shrinking */
+  border-radius: 8px;
+  object-fit: cover;
 }
 
 .card-text {
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Center text vertically */
-  max-width: 250px; /* Set a max width for the text container */
-  word-wrap: break-word; /* Allows long text to wrap onto the next line */
+  gap: 8px;
+  overflow: hidden; /* Hide overflow content */
 }
 
-.card-text h2, .card-text p {
+.card-text h2 {
   font-size: 14px;
   margin: 0;
-  overflow-wrap: break-word; /* Helps with breaking long words like addresses */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
+.card-text p {
+  font-size: 14px;
+  margin: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4; /* Show only 4 lines */
+  -webkit-box-orient: vertical;
+  line-height: 1.4;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .card {
+    max-height: 180px;
+  }
+
+  .card-image {
+    width: 60px;
+    height: 60px;
+    min-width: 60px;
+  }
+
+  .card-text p {
+    -webkit-line-clamp: 3; /* Show only 3 lines on mobile */
+  }
+}
 
 /* Styles for the search bar and button */
 .search-container {
