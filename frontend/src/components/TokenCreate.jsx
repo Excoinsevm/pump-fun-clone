@@ -6,6 +6,7 @@ import { ethers } from "ethers";
 import CONFIG from "../config";
 import { useEthersSigner } from "../ethers";
 import upload from "./upload.svg";
+import BeatLoader from "react-spinners/BeatLoader";
 
 const TokenCreate = () => {
   const [name, setName] = useState("");
@@ -17,6 +18,8 @@ const TokenCreate = () => {
   const [website, setWebsite] = useState("");
   const [isDragging, setIsDragging] = useState(false);
   const [showSocialLinks, setShowSocialLinks] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   const signer = useEthersSigner();
 
@@ -41,6 +44,7 @@ const TokenCreate = () => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
+    setErrors({ ...errors, file: "" });
 
     const files = e.dataTransfer.files;
     if (files && files.length > 0) {
@@ -52,9 +56,21 @@ const TokenCreate = () => {
     if (e.target.files && e.target.files.length > 0) {
       setFile(e.target.files[0]);
     }
+    setErrors({ ...errors, file: "" });
   };
 
   const handleCreate = async () => {
+    const newErrors = {};
+    if (!name.trim()) newErrors.name = "Name is required";
+    if (!ticker.trim()) newErrors.ticker = "Symbol is required";
+    if (!file) newErrors.file = "Image or video is required";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setIsLoading(true);
     const formData = new FormData();
     formData.append("name", name);
     formData.append("ticker", ticker);
@@ -87,6 +103,8 @@ const TokenCreate = () => {
     } catch (error) {
       console.error("Error creating token:", error);
       alert("Failed to create token. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -96,45 +114,58 @@ const TokenCreate = () => {
         <h3 className="start-new-coin" onClick={() => navigate("/")}>
           [go back]
         </h3>
-        {/* <p className="info-text">MemeCoin creation fee: 0.0001 ETH</p>
-        <p className="info-text">
-          Max supply: 1 million tokens. Initial mint: 200k tokens.
-        </p>
-        <p className="info-text">
-          If funding target of 24 ETH is met, a liquidity pool will be created
-          on Uniswap.
-        </p> */}
         <div className="input-container">
-          <label className="input-label">name</label>
+          <label className="input-label">
+            name <span className="required">*</span>
+          </label>
           <input
             type="text"
             value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="input-field"
+            onChange={(e) => {
+              setName(e.target.value);
+              setErrors({ ...errors, name: "" });
+            }}
+            className={`input-field ${errors.name ? "error-field" : ""}`}
           />
-          <label className="input-label">symbol</label>
+          {errors.name && <span className="error-message">{errors.name}</span>}
+
+          <label className="input-label">
+            symbol <span className="required">*</span>
+          </label>
           <input
             type="text"
             value={ticker}
-            onChange={(e) => setTicker(e.target.value)}
-            className="input-field"
+            onChange={(e) => {
+              setTicker(e.target.value);
+              setErrors({ ...errors, ticker: "" });
+            }}
+            className={`input-field ${errors.ticker ? "error-field" : ""}`}
           />
+          {errors.ticker && <span className="error-message">{errors.ticker}</span>}
+
           <label className="input-label">description</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="input-field"
           />
-          <label className="input-label">Image or video</label>
+
+          <label className="input-label">
+            Image or video <span className="required">*</span>
+          </label>
           <div
-            className={`file-drop-zone ${isDragging ? "dragging" : ""}`}
+            className={`file-drop-zone ${isDragging ? "dragging" : ""} ${
+              errors.file ? "error-field" : ""
+            }`}
             onDragEnter={handleDragIn}
             onDragLeave={handleDragOut}
             onDragOver={handleDrag}
             onDrop={handleDrop}
           >
             <div className="file-drop-content">
-              <span className="upload-icon"><img src={upload} alt="Logo" /></span>
+              <span className="upload-icon">
+                <img src={upload} alt="Logo" />
+              </span>
               <p>drag and drop an image or video</p>
               <input
                 type="file"
@@ -149,6 +180,8 @@ const TokenCreate = () => {
               {file && <p className="selected-file">Selected: {file.name}</p>}
             </div>
           </div>
+          {errors.file && <span className="error-message">{errors.file}</span>}
+
           <div className="social-links-section">
             <div
               className="social-links-header"
@@ -185,13 +218,17 @@ const TokenCreate = () => {
                   className="input-field"
                 />
                 <p className="info-text">
-                tip: coin data cannot be changed after creation
+                  tip: coin data cannot be changed after creation
                 </p>
               </div>
             )}
           </div>
           <button className="create-button" onClick={handleCreate}>
-            create coin
+            {isLoading ? (
+              <BeatLoader size={10} color={"#fff"} />
+            ) : (
+              "create coin"
+            )}
           </button>
           <p className="info-text">
             when your coin completes its bonding curve you receive 0.1 ETH

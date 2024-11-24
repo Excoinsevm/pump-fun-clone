@@ -1224,6 +1224,25 @@ textarea.input-field {
   color: white;
 }
 
+/* Home page */
+
+.required {
+  color: #ff4444;
+  margin-left: 4px;
+}
+
+.error-field {
+  border-color: #ff4444 !important;
+}
+
+.error-message {
+  color: #ff4444;
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+}
+
+
 /* Add media queries for mobile responsiveness */
 @media (max-width: 768px) {
   .app {
