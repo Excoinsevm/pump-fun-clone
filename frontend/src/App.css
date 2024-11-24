@@ -17,7 +17,8 @@
   padding: 16px 24px;
   background-color: rgb(27, 29, 40);
   border-bottom: 1px solid #333;
-
+  width: 100%;
+  position: relative;
 }
 
 .nav-left {
@@ -194,7 +195,7 @@
 
 .card-list {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Create 3 equal columns */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px; /* Space between cards */
   width: 100%;
   max-width: 1200px; /* Adjust this to fit your design */
@@ -1189,4 +1190,452 @@ textarea.input-field {
 
 .current-page {
   color: white;
+}
+
+/* Add media queries for mobile responsiveness */
+@media (max-width: 768px) {
+  .app {
+    padding: 10px;
+  }
+
+  .start-new-coin {
+    font-size: 20px;
+    text-align: center;
+    padding: 0 16px;
+  }
+
+  .start-new-image {
+    width: 140px;
+  }
+
+  .main-card {
+    width: 100%;
+    max-width: 400px;
+    margin: 10px auto;
+  }
+
+  .card-text h2, 
+  .card-text p {
+    font-size: 13px;
+    line-height: 1.4;
+    margin: 4px 0;
+  }
+
+  /* Adjust search and sort for mobile */
+  .search-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .search-input {
+    width: 100%;
+    max-width: none;
+  }
+
+  .search-button {
+    width: 100%;
+  }
+
+  .sort-dropdown {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .sort-options {
+    width: 100%;
+    left: 0;
+  }
+}
+
+/* Add small screen optimizations */
+@media (max-width: 480px) {
+  .card-list {
+    grid-template-columns: 1fr; /* Single column for very small screens */
+  }
+
+  .card {
+    padding: 12px;
+  }
+
+  .card-image {
+    width: 50px;
+    height: 50px;
+  }
+
+  .card-text {
+    min-width: 0;
+    width: calc(100% - 70px);
+  }
+
+  .search-container {
+    width: 90%;
+  }
+}
+
+/* Add these media queries for mobile responsiveness */
+@media (max-width: 768px) {
+  .token-details-section {
+    margin-top: 10px;
+    flex-direction: column;
+  }
+
+  .token-details h2 {
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .token-details p {
+    font-size: 13px;
+    word-break: break-all;
+  }
+
+  /* Trading card mobile styles */
+  .trading-card {
+    padding: 15px;
+  }
+
+  .trade-tabs {
+    gap: 8px;
+  }
+
+  .tab {
+    padding: 8px 15px;
+    font-size: 16px;
+  }
+
+  .token-actions {
+    flex-wrap: wrap;
+  }
+
+  .action-btn {
+    width: 100%;
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .amount-field input {
+    font-size: 20px;
+    padding: 12px;
+  }
+
+  .currency-badge {
+    font-size: 16px;
+  }
+
+  .quick-actions {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .quick-btn {
+    flex: 1 1 calc(50% - 3px);
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .trade-btn {
+    padding: 14px;
+    font-size: 16px;
+  }
+
+  /* Modal responsive styles */
+  .modal-content {
+    width: 90%;
+    max-width: 350px;
+    padding: 20px;
+    margin: 10px;
+  }
+}
+
+/* Small screen optimizations */
+@media (max-width: 480px) {
+  .token-detail-container {
+    padding: 10px;
+  }
+
+  .token-detail-image {
+    width: 120px;
+    height: 120px;
+  }
+
+  /* Table responsive styles */
+  .data-table {
+    font-size: 12px;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: 8px;
+  }
+
+  /* Hide less important columns on mobile */
+  .data-table th:nth-child(4),
+  .data-table td:nth-child(4) {
+    display: none;
+  }
+
+  /* Make transaction hash shorter */
+  .data-table td a {
+    display: block;
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Progress bars mobile optimization */
+  .progress-container p {
+    font-size: 12px;
+  }
+
+  .progress-bar {
+    height: 12px;
+  }
+}
+
+/* Add hamburger menu styles */
+.mobile-menu-button {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 8px;
+}
+
+
+/* Add media queries for mobile responsiveness */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 12px 16px;
+  }
+
+  .mobile-menu-button {
+    display: block;
+  }
+
+  .nav-left {
+    gap: 16px;
+  }
+
+  .nav-logo {
+    height: 28px;
+  }
+
+  .nav-links {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: rgb(27, 29, 40);
+    padding: 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    border-bottom: 1px solid #333;
+    display: none;
+    z-index: 1000;
+  }
+
+  .nav-links.show {
+    display: flex;
+  }
+
+  .nav-link {
+    width: 100%;
+    padding: 8px 0;
+    font-size: 16px;
+  }
+
+  .wallet-info {
+    gap: 8px;
+  }
+
+  .balance {
+    display: none; /* Hide balance on mobile */
+  }
+
+  .profile-dropdown {
+    padding: 4px 8px;
+  }
+
+  .nav-profile-avatar {
+    width: 28px;
+    height: 28px;
+  }
+
+  .username {
+    max-width: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .dropdown-menu {
+    right: 0;
+    left: auto;
+    min-width: 140px;
+  }
+}
+
+/* Small screen optimizations */
+@media (max-width: 480px) {
+  .navbar {
+    padding: 8px 12px;
+  }
+
+  .nav-logo {
+    height: 24px;
+  }
+
+  .profile-dropdown {
+    padding: 4px;
+  }
+
+  .username {
+    max-width: 60px;
+  }
+
+  .dropdown-menu {
+    min-width: 120px;
+  }
+}
+
+/* Add media queries for mobile responsiveness */
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 10px;
+  }
+
+  /* Profile header */
+  .profile-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 15px;
+  }
+
+  .avatar-image {
+    width: 100px;
+    height: 100px;
+  }
+
+  .profile-info {
+    align-items: center;
+  }
+
+  .profile-name {
+    font-size: 20px;
+  }
+
+  .profile-bio {
+    font-size: 14px;
+    text-align: center;
+  }
+
+  /* Wallet address section */
+  .wallet-address {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .wallet-address code {
+    font-size: 12px;
+    word-break: break-all;
+    text-align: center;
+  }
+
+  /* Profile tabs */
+  .profile-tabs {
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 5px;
+    gap: 10px;
+  }
+
+  .tab-button {
+    font-size: 14px;
+    padding: 6px 12px;
+  }
+
+  /* Coins list */
+  .coins-actions {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .action-button {
+    width: 100%;
+    padding: 10px;
+    background: rgba(134, 239, 172, 0.1);
+    border-radius: 8px;
+  }
+
+  .coin-item {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+  }
+
+  .coin-info {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .coin-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+/* Small screen optimizations */
+@media (max-width: 480px) {
+  .profile-container {
+    padding: 8px;
+  }
+
+  .avatar-image {
+    width: 80px;
+    height: 80px;
+  }
+
+  .profile-name {
+    font-size: 18px;
+  }
+
+  .profile-followers,
+  .profile-bio {
+    font-size: 13px;
+  }
+
+  .edit-profile-btn {
+    font-size: 13px;
+    padding: 6px 12px;
+  }
+
+  .wallet-address code {
+    font-size: 11px;
+  }
+
+  .coin-image {
+    width: 35px;
+    height: 35px;
+  }
+
+  .coin-details {
+    font-size: 13px;
+  }
+
+  .pagination {
+    gap: 15px;
+  }
+
+  .page-button {
+    font-size: 14px;
+  }
 }
