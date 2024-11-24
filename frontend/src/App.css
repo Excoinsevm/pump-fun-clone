@@ -194,7 +194,7 @@
 
 .card-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
   gap: 20px; /* Space between cards */
   width: 100%;
   /* max-width: 1200px; */
