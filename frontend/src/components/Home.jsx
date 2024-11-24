@@ -116,7 +116,6 @@ const App = () => {
 
   return (
     <div className="app">
-      <NavBar />
       <div className="card-container">
         <h3
           className="start-new-coin"

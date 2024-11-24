@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { ethers } from "ethers";
 import "../App.css";
-import NavBar from "./NavBar.jsx";
 import { abi } from "./abi";
 import { tokenAbi } from "./tokenAbi";
 import CONFIG from "../config";
@@ -181,7 +180,6 @@ const TokenDetail = () => {
 
   return (
     <div className="token-detail-container">
-      <NavBar></NavBar>
       <h3 className="start-new-coin" onClick={() => navigate("/")}>
         [go back]
       </h3>

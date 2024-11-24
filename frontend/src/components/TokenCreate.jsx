@@ -1,7 +1,6 @@
 import React, { useState, useCallback } from "react";
 import "../App.css";
 import { useNavigate } from "react-router-dom";
-import NavBar from "./NavBar.jsx";
 import { abi } from "./abi";
 import { ethers } from "ethers";
 import CONFIG from "../config";
@@ -92,8 +91,7 @@ const TokenCreate = () => {
   };
 
   return (
-    <div className="app">
-      <NavBar />
+    <div className="token-create-page">
       <div className="token-create-container">
         <h3 className="start-new-coin" onClick={() => navigate("/")}>
           [go back]
