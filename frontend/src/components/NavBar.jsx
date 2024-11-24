@@ -1,17 +1,14 @@
 import React from "react";
 import "../App.css";
+import { ConnectKitButton } from "connectkit";
 
 const NavBar = () => {
   return (
-      <nav className="navbar">
-        <a href="#" className="nav-link">
-          [how it works]
-        </a>
-        {/* <a href="#" className="nav-link">
-          [docs]
-        </a> */}
-        <button className="nav-button">[connect wallet]</button>
-      </nav>
+    <nav className="navbar">
+      <button className="nav-button">
+        <ConnectKitButton />
+      </button>
+    </nav>
   );
 };
 

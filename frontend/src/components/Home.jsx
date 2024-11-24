@@ -2,29 +2,34 @@ import React, { useState, useEffect } from "react";
 import "../App.css";
 import { useNavigate } from "react-router-dom";
 import NavBar from "./NavBar.jsx";
-const { ethers } = require("ethers");
-const { abi } = require("./abi");
+import { ethers } from "ethers";
+import { abi } from "./abi";
+import CONFIG from "../config";
+import { useEthersSigner } from "../ethers";
+import { useAccount } from "wagmi";
 
 const App = () => {
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
-  const provider = new ethers.JsonRpcProvider(process.env.REACT_APP_RPC_URL);
+  const { connector } = useAccount();
+  const signer = useEthersSigner();
+  const provider = new ethers.providers.JsonRpcProvider(CONFIG.RPC_URL);
   const factoryContract = new ethers.Contract(
-    process.env.REACT_APP_CONTRACT_ADDRESS,
+    CONFIG.CONTRACT_ADDRESS,
     abi,
-    provider
+    signer
   );
 
   useEffect(() => {
     const fetchMemeTokens = async () => {
       try {
         const eventFilter = factoryContract.filters.TokenCreated();
-        const latestBlock = await provider.getBlockNumber();
+        const latestBlock = provider.getBlockNumber();
         let events = await factoryContract.queryFilter(
           eventFilter,
-          latestBlock - 5000,
+          latestBlock - 800,
           "latest"
         );
 
@@ -48,7 +53,7 @@ const App = () => {
             tokenImageUrl:
               token.tokenImageUrl ||
               "https://pump.mypinata.cloud/ipfs/Qmf89h3H1LZ3DPmyYREtTs2wpSCZcnA961tQtwVh4Cp1vC?img-width=256&img-dpr=2&img-onerror=redirect",
-            fundingRaised: ethers.formatUnits(
+            fundingRaised: ethers.utils.formatUnits(
               token.fundingRaised || 0,
               "ether"
             ), // Format the fundingRaised from Wei to Ether

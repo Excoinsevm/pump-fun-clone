@@ -5,6 +5,8 @@ import "../App.css";
 import NavBar from "./NavBar.jsx";
 import { abi } from "./abi";
 import { tokenAbi } from "./tokenAbi";
+import CONFIG from "../config";
+import { useEthersSigner } from "../ethers";
 
 const TokenDetail = () => {
   const { tokenAddress } = useParams();
@@ -21,9 +23,10 @@ const TokenDetail = () => {
   const [cost, setCost] = useState("0");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
-  const factoryAddress = process.env.REACT_APP_CONTRACT_ADDRESS;
-
-  const provider = new ethers.BrowserProvider(window.ethereum);
+  const factoryAddress = CONFIG.CONTRACT_ADDRESS;
+  const provider = new ethers.providers.JsonRpcProvider(CONFIG.RPC_URL);
+  const signer = useEthersSigner();
+  const [tradeType, setTradeType] = useState('buy');
 
   const tokenDetails = card || {
     name: "Unknown",
@@ -43,19 +46,21 @@ const TokenDetail = () => {
   const maxSupply = parseInt(1_000_000_000);
   const fundingSupply = parseInt(800_000_000);
 
-  useEffect( () => {
-    
-    const factoryContract = new ethers.Contract(
-      factoryAddress,
-      abi,
-      provider
-    );
+  useEffect(() => {
+    const factoryContract = new ethers.Contract(factoryAddress, abi, provider);
     const queryEvents = async () => {
       const eventFilter = factoryContract.filters.TokenBought();
-    let events = await factoryContract.queryFilter(eventFilter, 1, "latest");
-    console.log(events);
-    }
-    
+      // let events = await factoryContract.queryFilter(eventFilter, 1, "latest");
+
+      const latestBlock = provider.getBlockNumber();
+      let events = await factoryContract.queryFilter(
+        eventFilter,
+        latestBlock - 800,
+        "latest"
+      );
+      console.log(events);
+    };
+
     // const boughts = await Promise.all(
     //   events.map(async (e) => {
     //     return {
@@ -104,15 +109,15 @@ const TokenDetail = () => {
         const tokenState = await factoryContract.tState(tokenAddress);
         const ethReserve = tokenState.ethReserve;
         console.log(ethReserve);
-        setFundingRaised(ethers.formatEther(ethReserve));
+        setFundingRaised(ethers.utils.formatEther(ethReserve));
 
         // Fetch total supply
         const contract = new ethers.Contract(tokenAddress, tokenAbi, provider);
         const totalSupplyResponse = await contract.balanceOf(
-          process.env.REACT_APP_CONTRACT_ADDRESS
+          CONFIG.CONTRACT_ADDRESS
         );
         var totalSupplyFormatted = parseInt(
-          ethers.formatUnits(totalSupplyResponse, "ether")
+          ethers.utils.formatUnits(totalSupplyResponse, "ether")
         );
         console.log(totalSupplyFormatted);
         setTotalSupply(parseInt(maxSupply - totalSupplyFormatted));
@@ -144,7 +149,7 @@ const TokenDetail = () => {
       //   ethers.parseEther(purchaseAmount)
       // ); // Replace with actual function
       // console.log(costInWei)
-      // setCost(ethers.formatUnits(costInWei, "ether"));
+      // setCost(ethers.utils.formatUnits(costInWei, "ether"));
 
       setCost("0.1");
       setIsModalOpen(true); // Open the modal
@@ -156,16 +161,16 @@ const TokenDetail = () => {
   // Function to handle purchase
   const handlePurchase = async () => {
     try {
-      const signer = await provider.getSigner();
       const factoryContract = new ethers.Contract(factoryAddress, abi, signer);
       const transaction = await factoryContract.buyToken(
         tokenAddress,
-        ethers.parseEther(purchaseAmount),
+        ethers.utils.parseEther(purchaseAmount),
         {
-          value: ethers.parseUnits(cost, "ether"),
+          value: ethers.utils.parseUnits(cost, "ether"),
         }
       );
       const receipt = await transaction.wait();
+      console.log(receipt);
 
       alert(`Transaction successful! Hash: ${receipt.hash}`);
       setIsModalOpen(false);
@@ -242,17 +247,86 @@ const TokenDetail = () => {
           </div>
 
           <div className="buy-tokens">
-            <h3>Buy Tokens</h3>
-            <input
-              type="number"
-              placeholder="Enter amount of tokens to buy"
-              value={purchaseAmount}
-              onChange={(e) => setPurchaseAmount(e.target.value)}
-              className="buy-input"
-            />
-            <button onClick={getCost} className="buy-button">
-              Purchase
-            </button>
+            <div className="trading-card">
+              <div className="trade-tabs">
+                <button 
+                  className={`tab ${tradeType === 'buy' ? 'active' : ''}`}
+                  onClick={() => setTradeType('buy')}
+                >
+                  Buy
+                </button>
+                <button 
+                  className={`tab ${tradeType === 'sell' ? 'active sell-active' : ''}`}
+                  onClick={() => setTradeType('sell')}
+                >
+                  Sell
+                </button>
+              </div>
+              
+              <div className="card-content1">
+                <div className="token-actions">
+                  {tradeType === 'buy' && (
+                    <button className="action-btn token-switch">
+                      switch to ${tokenDetails.symbol}
+                    </button>
+                  )}
+                  <button className="action-btn slippage">
+                    Set max slippage
+                  </button>
+                </div>
+
+                <div className="amount-field">
+                  <input
+                    type="text"
+                    placeholder="0.0"
+                    value={purchaseAmount}
+                    onChange={(e) => setPurchaseAmount(e.target.value)}
+                  />
+                  <div className="currency-badge">
+                    <span>{tradeType === 'buy' ? 'SOL' : '$UFOMO'}</span>
+                    {tradeType === 'sell' && (
+                      <img src="/path-to-ufomo-icon.png" alt="UFOMO" className="token-icon" />
+                    )}
+                  </div>
+                </div>
+
+                <div className="quick-actions">
+                  <button className="quick-btn">reset</button>
+                  {tradeType === 'buy' ? (
+                    <>
+                      <button className="quick-btn">0.1 SOL</button>
+                      <button className="quick-btn">0.5 SOL</button>
+                      <button className="quick-btn">1 SOL</button>
+                    </>
+                  ) : (
+                    <>
+                      <button className="quick-btn">25%</button>
+                      <button className="quick-btn">50%</button>
+                      <button className="quick-btn">75%</button>
+                      <button className="quick-btn">100%</button>
+                    </>
+                  )}
+                </div>
+
+                {tradeType === 'sell' && (
+                  <div className="estimated-return">
+                    <span>0.09657595 SOL</span>
+                  </div>
+                )}
+
+                <button 
+                  className={`trade-btn ${tradeType === 'sell' ? 'sell-btn' : ''}`} 
+                  onClick={getCost}
+                >
+                  place trade
+                </button>
+
+                <label className="comment-toggle">
+                  <input type="checkbox" />
+                  <span>add comment</span>
+                </label>
+              </div>
+            </div>
           </div>
         </div>
       </div>

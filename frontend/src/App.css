@@ -355,13 +355,14 @@
   color: rgb(134, 239, 172);
   font-size: 14px;
   margin-bottom: 10px;
-  text-align: center;
+  text-align: left;
 }
 
 .input-container {
   display: flex;
   flex-direction: column;
   width: 100%;
+  min-width: 300px;
 }
 
 .input-field {
@@ -372,7 +373,6 @@
   color: white;
   font-size: 14px;
   margin-bottom: 10px;
-  width: 100%;
 }
 
 textarea.input-field {
@@ -388,4 +388,361 @@ textarea.input-field {
   color: black;
   font-size: 14px;
   cursor: pointer;
+}
+
+
+.buy-tokens {
+  background-color: rgb(27, 29, 40);
+  color: white;
+  font-family: Arial, sans-serif;
+  /* min-height: 100vh; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* padding: 20px; */
+  width: 100%;
+}
+
+/* Trading Card Component */
+.trading-card {
+  background: rgba(28, 31, 38, 0.95);
+  border-radius: 24px;
+  backdrop-filter: blur(10px);
+  /* padding: 24px; */
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* Trade Type Tabs */
+.trade-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.tab {
+  flex: 1;
+  font-size: 20px;
+  padding: 12px;
+  border-radius: 16px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff80;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab.active {
+  background: #98FB98;
+  color: #000;
+  font-weight: 500;
+}
+
+.tab.active.sell-active {
+  background: #FF6B6B;
+}
+
+/* Card Content */
+.card-content1 {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Token Actions */
+.token-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.action-btn {
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+/* Amount Input Field */
+.amount-field {
+  position: relative;
+  background: rgba(44, 48, 56, 0.95);
+  border-radius: 16px;
+  padding: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.amount-field input {
+  width: 100%;
+  padding: 16px;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  outline: none;
+}
+
+.currency-badge {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.token-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+/* Quick Action Buttons */
+.quick-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.quick-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 60px;
+  text-align: center;
+}
+
+.quick-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+/* Estimated Return */
+.estimated-return {
+  padding: 12px;
+  color: #ffffff80;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* Trade Button */
+.trade-btn {
+  width: 100%;
+  padding: 16px;
+  border-radius: 16px;
+  border: none;
+  background: #98FB98;
+  color: #000;
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.trade-btn:hover {
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
+
+.trade-btn.sell-btn {
+  background: #FF6B6B;
+}
+
+/* Comment Toggle */
+.comment-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  cursor: pointer;
+  padding: 8px 0;
+  opacity: 0.8;
+}
+
+.comment-toggle input {
+  width: 18px;
+  height: 18px;
+  accent-color: #98FB98;
+}
+
+.comment-toggle input:checked {
+  accent-color: #FF6B6B;
+}
+
+/* Focus States */
+.amount-field:focus-within {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .trading-card {
+    padding: 16px;
+    border-radius: 16px;
+  }
+  
+  .tab {
+    padding: 10px;
+    font-size: 18px;
+  }
+  
+  .quick-actions {
+    flex-wrap: wrap;
+  }
+  
+  .quick-btn {
+    min-width: calc(50% - 4px);
+  }
+  
+  .action-btn {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+  
+  .amount-field input {
+    font-size: 20px;
+  }
+}
+
+/* Animations */
+.card-content,
+.tab,
+.trade-btn,
+.quick-btn,
+.action-btn {
+  transition: all 0.2s ease;
+}
+
+/* Dark Mode Enhancements */
+@media (prefers-color-scheme: dark) {
+  .trading-card {
+    background: rgba(28, 31, 38, 0.98);
+  }
+  
+  .amount-field {
+    background: rgba(44, 48, 56, 0.98);
+  }
+}
+
+.file-drop-zone {
+  border: 2px dashed rgb(134, 239, 172);
+  border-radius: 4px;
+  padding: 20px;
+  text-align: center;
+  background-color: #2a2a2a;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+.file-drop-zone.dragging {
+  border-color: #fff;
+  background-color: #3a3a3a;
+}
+
+.file-drop-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.upload-icon {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.select-file-button {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #000;
+  color: white;
+  border: 1px solid white;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.select-file-button:hover {
+  background-color: #333;
+}
+
+.selected-file {
+  margin-top: 10px;
+  font-size: 0.9em;
+  color: #888;
+}
+
+.input-label {
+  color: white;
+  font-size: 14px;
+  margin-bottom: 5px;
+  margin-top: 10px;
+}
+
+.social-links-section {
+  margin: 20px 0;
+}
+
+.social-links-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 10px;
+  border: 1px solid #444;
+  border-radius: 4px;
+  background-color: #2a2a2a;
+  transition: background-color 0.3s ease;
+}
+
+.social-links-header:hover {
+  background-color: #333;
+}
+
+.toggle-icon {
+  font-size: 20px;
+  line-height: 1;
+  min-width: 20px;
+}
+
+.social-links-inputs {
+  padding: 15px 0;
+  animation: slideDown 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 300px;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
