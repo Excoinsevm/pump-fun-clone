@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    container_name: pump-api
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - PINATA_JWT=${PINATA_JWT}
+    volumes:
+      - ./app:/app/app
+    networks:
+      - pump-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: pump-nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/ssl:/etc/nginx/ssl
+    depends_on:
+      - api
+    networks:
+      - pump-network
+
+networks:
+  pump-network:
+    driver: bridge 
