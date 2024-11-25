@@ -43,43 +43,23 @@ const App = () => {
     const fetchMemeTokens = async () => {
       setLoading(true);
       try {
-        const eventFilter = factoryContract.filters.TokenCreated();
-        const latestBlock = provider.getBlockNumber();
-        let events = await factoryContract.queryFilter(
-          eventFilter,
-          latestBlock - 800,
-          "latest"
-        );
-
-        const tokens = await Promise.all(
-          events.map(async (e) => {
-            const tokenInfo = await getTokenInfo(e.args[0]);
-            return {
-              tokenAddress: e.args[0],
-              creatorAddress: e.args[1],
-              ...tokenInfo,
-            };
-          })
-        );
+        const response = await fetch(`${CONFIG.API_URL}/tokens`);
+        const tokens = await response.json();
 
         setCards(
           tokens.map((token) => ({
             name: token.name || "",
             symbol: token.symbol || "",
             description: token.description || "",
-            tokenImageUrl:
-              token.tokenImageUrl ||
-              "https://pump.mypinata.cloud/ipfs/Qmf89h3H1LZ3DPmyYREtTs2wpSCZcnA961tQtwVh4Cp1vC?img-width=256&img-dpr=2&img-onerror=redirect",
-            fundingRaised: ethers.utils.formatUnits(
-              token.fundingRaised || 0,
-              "ether"
-            ), // Format the fundingRaised from Wei to Ether
-            tokenAddress: token.tokenAddress || "",
-            creatorAddress: token.creatorAddress || "",
+            tokenImageUrl: token.logo_url || "https://pump.mypinata.cloud/ipfs/Qmf89h3H1LZ3DPmyYREtTs2wpSCZcnA961tQtwVh4Cp1vC?img-width=256&img-dpr=2&img-onerror=redirect",
+            fundingRaised: "0", // You might want to add this field to your API response
+            tokenAddress: token.contract_address || "",
+            creatorAddress: token.owner_address || "",
+            createdAt: token.created_at,
           }))
         );
       } catch (error) {
-        console.error("Error fetching meme tokens:", error);
+        console.error("Error fetching tokens:", error);
       } finally {
         setLoading(false);
       }

@@ -71,22 +71,17 @@ const TokenCreate = () => {
     }
 
     setIsLoading(true);
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("ticker", ticker);
-    formData.append("description", description);
-    formData.append("twitter", twitter);
-    formData.append("telegram", telegram);
-    formData.append("website", website);
-    if (file) {
-      formData.append("file", file);
-    }
-
     try {
-      const response = await fetch("/token/create", {
+      // First, upload the file
+      const uploadFormData = new FormData();
+      uploadFormData.append("file", file);
+
+      const uploadResponse = await fetch(`${CONFIG.API_URL}/upload`, {
         method: "POST",
-        body: formData,
+        body: uploadFormData,
       });
+      const uploadData = await uploadResponse.json();
+
       const contract = new ethers.Contract(
         CONFIG.CONTRACT_ADDRESS,
         abi,
@@ -97,9 +92,42 @@ const TokenCreate = () => {
         value: ethers.utils.parseUnits("0.0001", "ether"),
       });
       const receipt = await transaction.wait();
+      console.log("receipt", receipt);
+      
+      // Find TokenCreated event and extract contract address
+      const tokenCreatedEvent = receipt.events.find(
+        event => event.eventSignature === "TokenCreated(address,address,uint256)"
+      );
+      console.log("event", tokenCreatedEvent);
+      const contractAddress = tokenCreatedEvent ? tokenCreatedEvent.args[0] : null;
+      console.log("address", contractAddress);
+      // Then create the token with the file URL and contract address
+      const tokenData = {
+        name: name,
+        symbol: ticker,
+        description: description,
+        twitter_url: twitter,
+        telegram_url: telegram,
+        website: website,
+        logo_url: uploadData.url,
+        contract_address: contractAddress,
+        owner_address: signer._address,
+      };
 
-      alert(`Transaction successful! Hash: ${receipt.hash}`);
+      const response = await fetch(`${CONFIG.API_URL}/tokens`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(tokenData),
+      });
+      
+      const data = await response.json();
+      console.log("Token created:", data);
+      
+      alert(`Transaction successful! Hash: ${receipt.blockHash}`);
       navigate("/");
+      
     } catch (error) {
       console.error("Error creating token:", error);
       alert("Failed to create token. Please try again.");
@@ -141,7 +169,9 @@ const TokenCreate = () => {
             }}
             className={`input-field ${errors.ticker ? "error-field" : ""}`}
           />
-          {errors.ticker && <span className="error-message">{errors.ticker}</span>}
+          {errors.ticker && (
+            <span className="error-message">{errors.ticker}</span>
+          )}
 
           <label className="input-label">description</label>
           <textarea
