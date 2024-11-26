@@ -1,41 +1,41 @@
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
 
-class TokenResponse(BaseModel):
-    id: int
-    symbol: str
-    name: str
-    owner_address: str
-    contract_address: Optional[str]
-    description: Optional[str]
-    logo_url: Optional[str]
-    decimals: int
-    status: Optional[str]
-    active: bool
-    total_supply: Optional[float]
-    market_cap: Optional[float]
-    price_in_trx: Optional[float]
-    volume_24hr: Optional[float]
-    pump_percentage: Optional[float]
-    created_at: datetime
-    updated_at: Optional[datetime]
-
-    class Config:
-        orm_mode = True
-
-
-class TokenHolderResponse(BaseModel):
-    id: int
-    token_id: int
+class TokenHolder(BaseModel):
     address: str
     balance: float
     percentage: float
-    holder_type: str
+    holder_type: str  # "BONDING_CURVE", "CREATOR", "NORMAL_USER"
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+
+class TokenDetail(BaseModel):
+    name: str
+    symbol: str
+    description: str
+    contract_address: str
+    owner_address: str
+    logo_url: str
+    twitter_url: Optional[str] = None
+    telegram_url: Optional[str] = None
+    website: Optional[str] = None
+    created_at: datetime
+    # market_cap: float
+    # bonding_curve_progress: float
+    # king_of_hill_progress: float
+    # virtual_sol_reserves: float
+    # virtual_token_reserves: float
+    # real_sol_reserves: float
+    # real_token_reserves: float
+    # total_supply: float
+    holders: List[TokenHolder]
+
+    class Config:
+        from_attributes = True
 
 
 class TransactionResponse(BaseModel):
