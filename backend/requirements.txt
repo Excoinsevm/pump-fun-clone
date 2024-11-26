@@ -8,3 +8,4 @@ pydantic-settings
 alembic
 httpx
 python-multipart
+psycopg2-binary==2.9.9
