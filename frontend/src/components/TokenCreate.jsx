@@ -76,7 +76,7 @@ const TokenCreate = () => {
       const uploadFormData = new FormData();
       uploadFormData.append("file", file);
 
-      const uploadResponse = await fetch(`${CONFIG.API_URL}/upload`, {
+      const uploadResponse = await fetch(`${CONFIG.API_URL}/upload/`, {
         method: "POST",
         body: uploadFormData,
       });
@@ -114,7 +114,7 @@ const TokenCreate = () => {
         owner_address: signer._address,
       };
 
-      const response = await fetch(`${CONFIG.API_URL}/tokens`, {
+      const response = await fetch(`${CONFIG.API_URL}/tokens/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

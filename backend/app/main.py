@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Token Management API", version="1.0.0")
 
-origins = ["pumpappclone.vercel.app"]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,

@@ -43,7 +43,7 @@ const App = () => {
     const fetchMemeTokens = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`${CONFIG.API_URL}/tokens`);
+        const response = await fetch(`${CONFIG.API_URL}/tokens/`);
         const tokens = await response.json();
 
         setCards(
