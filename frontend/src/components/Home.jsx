@@ -51,7 +51,7 @@ const App = () => {
             name: token.name || "",
             symbol: token.symbol || "",
             description: token.description || "",
-            tokenImageUrl: token.logo_url || "https://pump.mypinata.cloud/ipfs/Qmf89h3H1LZ3DPmyYREtTs2wpSCZcnA961tQtwVh4Cp1vC?img-width=256&img-dpr=2&img-onerror=redirect",
+            tokenImageUrl: token.logo_url.replace("https://pump.mypinata.cloud/ipfs/", "https://ipfs.io/ipfs/") || "https://pump.mypinata.cloud/ipfs/Qmf89h3H1LZ3DPmyYREtTs2wpSCZcnA961tQtwVh4Cp1vC?img-width=256&img-dpr=2&img-onerror=redirect",
             fundingRaised: "0", // You might want to add this field to your API response
             tokenAddress: token.contract_address || "",
             creatorAddress: token.owner_address || "",
