@@ -23,11 +23,20 @@ services:
       - "443:443"
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./nginx/ssl:/etc/nginx/ssl
+      - ./nginx/certbot:/etc/letsencrypt
+      - ./nginx/www:/var/www/html
     depends_on:
       - api
+      - certbot
     networks:
       - pump-network
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./nginx/certbot:/etc/letsencrypt
+      - ./nginx/www:/var/www/html
 
 networks:
   pump-network:
