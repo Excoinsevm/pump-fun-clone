@@ -7,7 +7,7 @@ import { tokenAbi } from "./tokenAbi";
 import CONFIG from "../config";
 import { useEthersSigner } from "../ethers";
 import BeatLoader from "react-spinners/BeatLoader";
-import { useAccount } from 'wagmi'
+import { useAccount } from "wagmi";
 
 const TokenDetail = () => {
   const { tokenAddress } = useParams();
@@ -22,7 +22,7 @@ const TokenDetail = () => {
   const factoryAddress = CONFIG.CONTRACT_ADDRESS;
   const provider = new ethers.providers.JsonRpcProvider(CONFIG.RPC_URL);
   const signer = useEthersSigner();
-  const account = useAccount()
+  const account = useAccount();
   const [isLoading, setIsLoading] = useState(false);
   const [inputError, setInputError] = useState(false);
 
@@ -30,6 +30,8 @@ const TokenDetail = () => {
   const [fundingRaised, setFundingRaised] = useState(0);
   const [totalSupply, setTotalSupply] = useState("0");
   const [balance, setBalance] = useState("0");
+  const [ethReserve, setEthReserve] = useState(0);
+  const [tokenReserve, setTokenReserve] = useState(0);
 
   // Constants
   const fundingGoal = 5;
@@ -68,6 +70,9 @@ const TokenDetail = () => {
         );
         const tokenState = await factoryContract.tState(tokenAddress);
         const ethReserve = tokenState.ethReserve;
+        const tokenReserve = tokenState.tokenReserve;
+        setEthReserve(ethReserve);
+        setTokenReserve(tokenReserve);
         const adjustedReserve = ethers.BigNumber.from(ethReserve).sub(
           ethers.utils.parseEther("1.7")
         );
@@ -86,7 +91,7 @@ const TokenDetail = () => {
 
         // Calculate remaining tokens
         setRemainingTokens(fundingSupply + totalSupplyFormatted - maxSupply);
-        console.log(account.address)
+        // console.log(account.address);
         const balanceOfMyself = await contract.balanceOf(account.address);
         setBalance(
           parseFloat(
@@ -144,6 +149,36 @@ const TokenDetail = () => {
     }
   };
 
+  const handlePurchaseToken = async () => {
+    if (!purchaseAmount || parseFloat(purchaseAmount) === 0) {
+      setInputError(true);
+      return;
+    }
+
+    setInputError(false);
+    setIsLoading(true);
+    const ethAmount = getExactTokenAmountForBuying(purchaseAmount);
+    try {
+      const factoryContract = new ethers.Contract(factoryAddress, abi, signer);
+      const transaction = await factoryContract.buyToken(
+        tokenAddress,
+        ethers.utils.parseEther(ethAmount),
+        {
+          value: ethers.utils.parseUnits(ethAmount, "ether"),
+        }
+      );
+      const receipt = await transaction.wait();
+      console.log(receipt);
+
+      alert(`Transaction successful! Hash: ${receipt.transactionHash}`);
+      // setIsModalOpen(false);
+    } catch (error) {
+      console.error("Error during purchase:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleSell = async () => {
     if (!purchaseAmount || parseFloat(purchaseAmount) === 0) {
       setInputError(true);
@@ -152,22 +187,60 @@ const TokenDetail = () => {
     setInputError(false);
     setIsLoading(true);
     try {
+      const tokenContract = new ethers.Contract(tokenAddress, tokenAbi, signer);
+      const tx = await tokenContract.approve(
+        factoryAddress,
+        ethers.utils.parseEther(purchaseAmount)
+      );
+      await tx.wait();
       const factoryContract = new ethers.Contract(factoryAddress, abi, signer);
       const transaction = await factoryContract.sellToken(
         tokenAddress,
         ethers.utils.parseEther(purchaseAmount),
-        0 // FIXME: slippage
+        0
       );
       const receipt = await transaction.wait();
       console.log(receipt);
 
-      alert(`Transaction successful! Hash: ${receipt.txHash}`);
+      alert(`Transaction successful! Hash: ${receipt.transactionHash}`);
       // setIsModalOpen(false);
     } catch (error) {
       console.error("Error during purchase:", error);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const getTokenAmountBought = (ethAmount) => {
+    if (parseFloat(ethAmount) === 0.0 || ethAmount === "") {
+      return 0;
+    }
+    const ethAmt = ethers.utils.parseEther(ethAmount);
+    const tokenAmount = ethAmt.mul(tokenReserve).div(ethAmt.add(ethReserve));
+    const tokenAmt = ethers.utils.formatEther(tokenAmount);
+    return Math.round(tokenAmt);
+  };
+
+  const getExactTokenAmountForBuying = (tokenAmount) => {
+    if (parseFloat(tokenAmount) === 0.0 || tokenAmount === "") {
+      return 0;
+    }
+    const tokenAmt = ethers.utils.parseUnits(tokenAmount.toString(), "ether");
+    const ethAmount = tokenAmt
+      .mul(ethReserve)
+      .div(tokenReserve.sub(tokenAmt).add(1));
+    const ethAmt = ethers.utils.formatEther(ethAmount);
+    return parseFloat(ethAmt).toFixed(4);
+  };
+
+  const getEthAmountReceived = (tokenAmount) => {
+    if (parseFloat(tokenAmount) === 0.0 || tokenAmount === "") {
+      return 0;
+    }
+    const tokenAmt = ethers.utils.parseUnits(tokenAmount.toString(), "ether");
+    const ethAmount = tokenAmt.mul(ethReserve).div(tokenReserve.add(tokenAmt));
+    const ethAmt = ethers.utils.formatEther(ethAmount);
+    return parseFloat(ethAmt).toFixed(4);
   };
 
   return (
@@ -177,11 +250,6 @@ const TokenDetail = () => {
       </h3>
 
       <div className="token-detail-content">
-        <div className="token-detail-content-left">
-          {/* <div className="token-info">
-          </div> */}
-          TODO
-        </div>
         <div className="token-detail-content-right">
           <div className="trading-panel">
             <div className="trade-tabs">
@@ -230,51 +298,84 @@ const TokenDetail = () => {
                 </div>
               </div>
 
-              {useEth && (
+              {
                 <div className="quick-amounts">
-                  <button onClick={() => setPurchaseAmount("0.0")}>
-                    reset
-                  </button>
                   {tradeType === "buy" ? (
-                    <>
-                      <button onClick={() => setPurchaseAmount("0.1")}>
-                        0.1 ETH
-                      </button>
-                      <button onClick={() => setPurchaseAmount("0.5")}>
-                        0.5 ETH
-                      </button>
-                      <button onClick={() => setPurchaseAmount("1")}>
-                        1 ETH
-                      </button>
-                    </>
+                    useEth && (
+                      <>
+                        <button onClick={() => setPurchaseAmount("")}>
+                          reset
+                        </button>
+                        <button onClick={() => setPurchaseAmount("0.1")}>
+                          0.1 ETH
+                        </button>
+                        <button onClick={() => setPurchaseAmount("0.5")}>
+                          0.5 ETH
+                        </button>
+                        <button onClick={() => setPurchaseAmount("1")}>
+                          1 ETH
+                        </button>
+                      </>
+                    )
                   ) : (
                     <>
-                      <button onClick={() => setPurchaseAmount((balance * 0.25).toString())}>
+                      <button onClick={() => setPurchaseAmount("")}>
+                        reset
+                      </button>
+                      <button
+                        onClick={() =>
+                          setPurchaseAmount((balance * 0.25).toString())
+                        }
+                      >
                         25%
                       </button>
-                      <button onClick={() => setPurchaseAmount((balance * 0.5).toString())}>
+                      <button
+                        onClick={() =>
+                          setPurchaseAmount((balance * 0.5).toString())
+                        }
+                      >
                         50%
                       </button>
-                      <button onClick={() => setPurchaseAmount((balance * 0.75).toString())}>
+                      <button
+                        onClick={() =>
+                          setPurchaseAmount((balance * 0.75).toString())
+                        }
+                      >
                         75%
                       </button>
-                      <button onClick={() => setPurchaseAmount(balance.toString())}>
+                      <button
+                        onClick={() => setPurchaseAmount(balance.toString())}
+                      >
                         100%
                       </button>
                     </>
                   )}
                 </div>
-              )}
+              }
 
               <div className="estimated-return">
-                <span>0.09657595 SOL</span>
+                {purchaseAmount && (
+                  <span>
+                    {tradeType === "sell"
+                      ? `${getEthAmountReceived(purchaseAmount)} ETH`
+                      : useEth
+                      ? `${getTokenAmountBought(purchaseAmount)} ${
+                          tokenData.symbol
+                        }`
+                      : `${getExactTokenAmountForBuying(purchaseAmount)} ETH`}
+                  </span>
+                )}
               </div>
 
               <button
                 className="place-trade-btn"
                 onClick={() => {
                   if (tradeType === "buy") {
-                    handlePurchase();
+                    if (useEth) {
+                      handlePurchase();
+                    } else {
+                      handlePurchaseToken();
+                    }
                   } else {
                     handleSell();
                   }
@@ -362,6 +463,10 @@ const TokenDetail = () => {
               </div>
             </div>
           </div>
+        </div>
+        <div className="token-detail-content-left">
+          {/* <div className="token-info">
+          </div> */}
         </div>
       </div>
     </div>
