@@ -1927,3 +1927,65 @@ textarea.input-field {
   border-color: red;
   background-color: #ffebee;
 }
+
+/* General styles for mobile responsiveness */
+.token-detail-page {
+    padding: 10px; /* Add padding for mobile */
+}
+
+.token-detail-content {
+    display: flex;
+    flex-direction: column; /* Stack elements vertically on mobile */
+}
+
+.token-detail-content-left,
+.token-detail-content-right {
+    width: 100%; /* Full width on mobile */
+}
+
+.token-detail-content-right {
+    margin-bottom: 20px; /* Space between sections */
+}
+
+.token-header {
+    display: flex;
+    flex-direction: column; /* Stack logo and title vertically */
+    align-items: center; /* Center align items */
+}
+
+.token-image {
+    width: 100px; /* Set a fixed width for the image */
+    height: auto; /* Maintain aspect ratio */
+}
+
+.amount-input {
+    display: flex;
+    flex-direction: column; /* Stack input and label vertically */
+    align-items: flex-start; /* Align items to the start */
+}
+
+.quick-amounts {
+    display: flex;
+    flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+    justify-content: space-between; /* Space out buttons */
+}
+
+@media (min-width: 768px) {
+    .token-detail-content {
+        flex-direction: row; /* Switch to row layout on larger screens */
+    }
+
+    .token-detail-content-left,
+    .token-detail-content-right {
+        width: 50%; /* Half width on larger screens */
+    }
+
+    .token-header {
+        flex-direction: row; /* Align logo and title side by side */
+        justify-content: flex-start; /* Align items to the start */
+    }
+
+    .token-image {
+        width: 150px; /* Larger image on desktop */
+    }
+}
