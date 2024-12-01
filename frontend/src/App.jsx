@@ -23,11 +23,11 @@ const config = createConfig(
     // Required API Keys
     walletConnectProjectId: projectId,
     // Required App Info
-    appName: "Token App Demo",
+    appName: "Token App",
     // Optional App Info
-    appDescription: "Token App Demo",
-    appUrl: "https://family.co", // your app's url
-    appIcon: "https://family.co/logo.png", // your app's icon, no bigger than 1024x1024px (max. 1MB)
+    appDescription: "Token App",
+    appUrl: "https://pumpappclone.vercel.app", // your app's url
+    appIcon: "https://pumpappclone.vercel.app/logo.svg", // your app's icon, no bigger than 1024x1024px (max. 1MB)
   })
 );
 

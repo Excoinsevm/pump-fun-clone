@@ -288,7 +288,7 @@
   padding: 10px;
   border: 1px solid rgb(134, 239, 172);
   border-radius: 4px;
-  background-color:  rgb(134, 239, 172);
+  background-color: rgb(134, 239, 172);
   color: black;
   font-size: 13px;
   margin-right: 10px;
@@ -572,7 +572,6 @@ textarea.input-field {
   cursor: pointer;
 }
 
-
 .buy-tokens {
   background-color: rgb(27, 29, 40);
   color: white;
@@ -618,13 +617,13 @@ textarea.input-field {
 }
 
 .tab.active {
-  background: #98FB98;
+  background: #98fb98;
   color: #000;
   font-weight: 500;
 }
 
 .tab.active.sell-active {
-  background: #FF6B6B;
+  background: #ff6b6b;
 }
 
 /* Card Content */
@@ -734,7 +733,7 @@ textarea.input-field {
   padding: 16px;
   border-radius: 16px;
   border: none;
-  background: #98FB98;
+  background: #98fb98;
   color: #000;
   font-size: 18px;
   font-weight: 500;
@@ -748,7 +747,7 @@ textarea.input-field {
 }
 
 .trade-btn.sell-btn {
-  background: #FF6B6B;
+  background: #ff6b6b;
 }
 
 /* Comment Toggle */
@@ -765,11 +764,11 @@ textarea.input-field {
 .comment-toggle input {
   width: 18px;
   height: 18px;
-  accent-color: #98FB98;
+  accent-color: #98fb98;
 }
 
 .comment-toggle input:checked {
-  accent-color: #FF6B6B;
+  accent-color: #ff6b6b;
 }
 
 /* Focus States */
@@ -783,25 +782,25 @@ textarea.input-field {
     padding: 16px;
     border-radius: 16px;
   }
-  
+
   .tab {
     padding: 10px;
     font-size: 18px;
   }
-  
+
   .quick-actions {
     flex-wrap: wrap;
   }
-  
+
   .quick-btn {
     min-width: calc(50% - 4px);
   }
-  
+
   .action-btn {
     padding: 10px 16px;
     font-size: 13px;
   }
-  
+
   .amount-field input {
     font-size: 20px;
   }
@@ -821,7 +820,7 @@ textarea.input-field {
   .trading-card {
     background: rgba(28, 31, 38, 0.98);
   }
-  
+
   .amount-field {
     background: rgba(44, 48, 56, 0.98);
   }
@@ -933,8 +932,7 @@ textarea.input-field {
 .skeleton {
   border-radius: 8px;
   overflow: hidden;
-  animation: pulse 2s cubic-bezier(.4,0,.6,1) infinite;
-  
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 .skeleton-image {
@@ -1242,7 +1240,6 @@ textarea.input-field {
   display: block;
 }
 
-
 /* Add media queries for mobile responsiveness */
 @media (max-width: 768px) {
   .app {
@@ -1265,7 +1262,7 @@ textarea.input-field {
     margin: 10px auto;
   }
 
-  .card-text h2, 
+  .card-text h2,
   .card-text p {
     font-size: 13px;
     line-height: 1.4;
@@ -1454,7 +1451,6 @@ textarea.input-field {
   cursor: pointer;
   padding: 8px;
 }
-
 
 /* Add media queries for mobile responsiveness */
 @media (max-width: 768px) {
@@ -1712,19 +1708,28 @@ textarea.input-field {
 
 .token-detail-content {
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 3fr 1fr;
   gap: 20px;
 }
 
 .token-detail-content-left {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   column-gap: 20;
   gap: 20px;
+  min-width: 350px;
+  max-width: 1000px;
 }
 
 .token-detail-content-right {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 20px;
+  min-width: 350px;
+}
+
+.tradingview-chart {
+  height: 400px;
 }
 
 .token-info {
@@ -1930,62 +1935,159 @@ textarea.input-field {
 
 /* General styles for mobile responsiveness */
 .token-detail-page {
-    padding: 10px; /* Add padding for mobile */
+  padding: 10px; /* Add padding for mobile */
 }
 
 .token-detail-content {
-    display: flex;
-    flex-direction: column; /* Stack elements vertically on mobile */
+  display: flex;
+  flex-direction: column; /* Stack elements vertically on mobile */
 }
 
 .token-detail-content-left,
 .token-detail-content-right {
-    width: 100%; /* Full width on mobile */
+  width: 100%; /* Full width on mobile */
 }
 
 .token-detail-content-right {
-    margin-bottom: 20px; /* Space between sections */
+  margin-bottom: 20px; /* Space between sections */
 }
 
 .token-header {
-    display: flex;
-    flex-direction: column; /* Stack logo and title vertically */
-    align-items: center; /* Center align items */
+  display: flex;
+  flex-direction: column; /* Stack logo and title vertically */
+  align-items: center; /* Center align items */
 }
 
 .token-image {
-    width: 100px; /* Set a fixed width for the image */
-    height: auto; /* Maintain aspect ratio */
+  width: 100px; /* Set a fixed width for the image */
+  height: auto; /* Maintain aspect ratio */
 }
 
 .amount-input {
-    display: flex;
-    flex-direction: column; /* Stack input and label vertically */
-    align-items: flex-start; /* Align items to the start */
+  display: flex;
+  flex-direction: column; /* Stack input and label vertically */
+  align-items: flex-start; /* Align items to the start */
 }
 
 .quick-amounts {
-    display: flex;
-    flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
-    justify-content: space-between; /* Space out buttons */
+  display: flex;
+  flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+  justify-content: space-between; /* Space out buttons */
+}
+
+.tradingview-widget-copyright {
+  display: none;
 }
 
 @media (min-width: 768px) {
-    .token-detail-content {
-        flex-direction: row; /* Switch to row layout on larger screens */
-    }
+  .token-detail-content {
+    flex-direction: row; /* Switch to row layout on larger screens */
+  }
 
-    .token-detail-content-left,
-    .token-detail-content-right {
-        width: 50%; /* Half width on larger screens */
-    }
+  .token-detail-content-left {
+    width: 75%;
+  }
+  .token-detail-content-right {
+    width: 25%; /* Half width on larger screens */
+  }
 
-    .token-header {
-        flex-direction: row; /* Align logo and title side by side */
-        justify-content: flex-start; /* Align items to the start */
-    }
+  .token-header {
+    flex-direction: row; /* Align logo and title side by side */
+    justify-content: flex-start; /* Align items to the start */
+  }
 
-    .token-image {
-        width: 150px; /* Larger image on desktop */
-    }
+  .token-image {
+    width: 150px; /* Larger image on desktop */
+  }
+}
+
+.tab-switch {
+  /* display: flex; */
+  margin-bottom: 20px;
+}
+
+.tab-switch button {
+  padding: 10px 20px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  background-color: transparent; /* Default background */
+  color: #999; /* Default text color */
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+}
+
+.tab-switch button.active {
+  background-color: #90ee90; /* Light green background for active tab */
+  color: black; /* Text color for active tab */
+}
+
+.tab-switch button:hover {
+  background-color: #d3ffd3; /* Light green on hover */
+  color: black; /* Text color on hover */
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+.thread-reply {
+  margin-bottom: 0.25rem;
+  padding: 0.25rem;
+  border-radius: 2px;
+  background-color: rgb(46 48 58);
+}
+
+.thread-reply-header {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 0.75rem;
+  color: rgb(148 163 184);
+}
+
+.user-avatar {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.thread-reply-content {
+  padding: 0.25rem;
+  border-radius: 5px;
+  flex: 1;
+}
+
+.likes {
+  display: flex;
+  gap: 5px;
+}
+
+.likes:hover {
+  color: red;
+  cursor: pointer;
+}
+
+.likes > img:hover {
+  fill: red;
+  cursor: pointer;
+}
+
+.thread-reply-button:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.trades-content {
+  background-color: rgb(46 48 58);
 }

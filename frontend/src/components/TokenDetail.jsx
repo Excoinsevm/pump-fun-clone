@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { ethers } from "ethers";
 import "../App.css";
@@ -8,6 +8,8 @@ import CONFIG from "../config";
 import { useEthersSigner } from "../ethers";
 import BeatLoader from "react-spinners/BeatLoader";
 import { useAccount } from "wagmi";
+import { AdvancedRealTimeChart } from "react-ts-tradingview-widgets";
+import heart from "./heart.svg";
 
 const TokenDetail = () => {
   const { tokenAddress } = useParams();
@@ -37,6 +39,73 @@ const TokenDetail = () => {
   const fundingGoal = 5;
   const maxSupply = parseInt(1_000_000_000);
   const fundingSupply = parseInt(800_000_000);
+
+  const [activeTab, setActiveTab] = useState("thread");
+
+  // Sample data for trades (replace with actual data fetching logic)
+  const tradesData = [
+    {
+      account: "FUatjT",
+      type: "buy",
+      eth: 0.5,
+      idp: "9.49m",
+      date: "16s ago",
+      transaction: "4b38j3",
+    },
+    {
+      account: "d16xMV",
+      type: "buy",
+      eth: 0.21,
+      idp: "4.06m",
+      date: "25s ago",
+      transaction: "5MYibQ",
+    },
+    // ... more trades
+  ];
+
+  // Sample replies data
+  const repliesData = [
+    {
+      avatar:
+        "https://pump.mypinata.cloud/ipfs/QmeSzchzEPqCU1jwTnsipwcBAeH7S4bmVvFGfF65iA1BY1?img-width=16&img-dpr=2&img-onerror=redirect",
+      name: "DDKrich",
+      reply_time: "2:04:05 PM",
+      likes: 7,
+      content: "seems legit",
+    },
+    {
+      avatar:
+        "https://pump.mypinata.cloud/ipfs/QmeSzchzEPqCU1jwTnsipwcBAeH7S4bmVvFGfF65iA1BY1?img-width=16&img-dpr=2&img-onerror=redirect",
+      name: "dh8c4",
+      reply_time: "2:06:14 PM",
+      likes: 7,
+      content: "sound legit for me",
+    },
+    {
+      avatar:
+        "https://pump.mypinata.cloud/ipfs/QmeSzchzEPqCU1jwTnsipwcBAeH7S4bmVvFGfF65iA1BY1?img-width=16&img-dpr=2&img-onerror=redirect",
+      name: "WARBUCKS",
+      reply_time: "2:11:12 PM",
+      likes: 5,
+      content: "Take my money",
+    },
+    {
+      avatar:
+        "https://pump.mypinata.cloud/ipfs/QmeSzchzEPqCU1jwTnsipwcBAeH7S4bmVvFGfF65iA1BY1?img-width=16&img-dpr=2&img-onerror=redirect",
+      name: "jrjubilium",
+      reply_time: "2:13:40 PM",
+      likes: 5,
+      content: "nice top holder trimmed sendor",
+    },
+    {
+      avatar:
+        "https://pump.mypinata.cloud/ipfs/QmeSzchzEPqCU1jwTnsipwcBAeH7S4bmVvFGfF65iA1BY1?img-width=16&img-dpr=2&img-onerror=redirect",
+      name: "7NRvsk",
+      reply_time: "2:15:12 PM",
+      likes: 5,
+      content: "5% out",
+    },
+  ];
 
   useEffect(() => {
     const fetchTokenData = async () => {
@@ -250,6 +319,97 @@ const TokenDetail = () => {
       </h3>
 
       <div className="token-detail-content">
+        <div className="token-detail-content-left">
+          <div class="tradingview-chart">
+            <AdvancedRealTimeChart
+              theme="dark"
+              autosize
+              symbol={tokenData.symbol}
+              copyrightStyles='display": "none"'
+            ></AdvancedRealTimeChart>
+          </div>
+          {/* Tab Switch */}
+          <div className="tab-switch">
+            <button
+              onClick={() => setActiveTab("thread")}
+              className={activeTab === "thread" ? "active" : ""}
+            >
+              Thread
+            </button>
+            <button
+              onClick={() => setActiveTab("trades")}
+              className={activeTab === "trades" ? "active" : ""}
+            >
+              Trades
+            </button>
+          </div>
+
+          {/* Tab Content */}
+          {activeTab === "thread" && (
+            <div className="thread-content">
+              <div className="thread-reply">
+                <div className="thread-reply-header">
+                  <img
+                    src="https://pump.mypinata.cloud/ipfs/QmeSzchzEPqCU1jwTnsipwcBAeH7S4bmVvFGfF65iA1BY1?img-width=16&img-dpr=2&img-onerror=redirect"
+                    alt="User Avatar"
+                    className="user-avatar"
+                  />
+                  <strong>name</strong>
+                  <span>12/1/2024, 2:00:18 PM</span>
+                </div>
+                <p>just a test (test)</p>
+                <p>this is just a test</p>
+              </div>
+              {repliesData.map((reply, index) => (
+                <div key={index} className="thread-reply">
+                  <div className="thread-reply-header">
+                    <img
+                      src={reply.avatar}
+                      alt="User Avatar"
+                      className="user-avatar"
+                    />
+                    <strong>{reply.name}</strong>
+                    <span>{reply.reply_time}</span>
+                    <span className="likes"><img src={heart} alt="Icon" width="16" /> {reply.likes}</span>
+                    <span class="thread-reply-button">[reply]</span>
+                  </div>
+                  <div className="thread-reply-content">
+                    <div>{reply.content}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {activeTab === "trades" && (
+            <div className="trades-content">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Account</th>
+                    <th>Type</th>
+                    <th>ETH</th>
+                    <th>IDP</th>
+                    <th>Date</th>
+                    <th>Transaction</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {tradesData.map((trade, index) => (
+                    <tr key={index}>
+                      <td>{trade.account}</td>
+                      <td>{trade.type}</td>
+                      <td>{trade.eth}</td>
+                      <td>{trade.idp}</td>
+                      <td>{trade.date}</td>
+                      <td>{trade.transaction}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
         <div className="token-detail-content-right">
           <div className="trading-panel">
             <div className="trade-tabs">
@@ -463,10 +623,6 @@ const TokenDetail = () => {
               </div>
             </div>
           </div>
-        </div>
-        <div className="token-detail-content-left">
-          {/* <div className="token-info">
-          </div> */}
         </div>
       </div>
     </div>
