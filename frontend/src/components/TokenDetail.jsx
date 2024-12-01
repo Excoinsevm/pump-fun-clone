@@ -10,6 +10,7 @@ import BeatLoader from "react-spinners/BeatLoader";
 import { useAccount } from "wagmi";
 import { AdvancedRealTimeChart } from "react-ts-tradingview-widgets";
 import heart from "./heart.svg";
+import CommentModal from "./CommentModal";
 
 const TokenDetail = () => {
   const { tokenAddress } = useParams();
@@ -42,6 +43,8 @@ const TokenDetail = () => {
 
   const [activeTab, setActiveTab] = useState("thread");
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   // Sample data for trades (replace with actual data fetching logic)
   const tradesData = [
     {
@@ -55,6 +58,14 @@ const TokenDetail = () => {
     {
       account: "d16xMV",
       type: "buy",
+      eth: 0.21,
+      idp: "4.06m",
+      date: "25s ago",
+      transaction: "5MYibQ",
+    },
+    {
+      account: "d16xMV",
+      type: "sell",
       eth: 0.21,
       idp: "4.06m",
       date: "25s ago",
@@ -105,6 +116,30 @@ const TokenDetail = () => {
       likes: 5,
       content: "5% out",
     },
+  ];
+
+  // Sample holder distribution data
+  const holderDistributionData = [
+    { address: "9qP5Uv", percentage: 29.5, holder_type: "BONDING_CURVE" },
+    { address: "C4dUZB", percentage: 2.45 },
+    { address: "Hr8JVp", percentage: 2.16 },
+    { address: "9ER2KU", percentage: 2.07 },
+    { address: "A4Zmko", percentage: 1.91 },
+    { address: "GpJSc5", percentage: 1.88 },
+    { address: "GuLeBH", percentage: 1.83 },
+    { address: "GmAmTk", percentage: 1.81 },
+    { address: "5nFoxC", percentage: 1.76 },
+    { address: "6EtpaF", percentage: 1.74 },
+    { address: "9ieq7B", percentage: 1.7 },
+    { address: "E9Hj79", percentage: 1.65 },
+    { address: "7pfi6t", percentage: 1.63 },
+    { address: "7Ts8Uj", percentage: 1.62 },
+    { address: "EU8vyG", percentage: 1.52 },
+    { address: "GUx2Ww", percentage: 1.46 },
+    { address: "4bdEcZ", percentage: 1.42 },
+    { address: "8VARYw", percentage: 1.4 },
+    { address: "88zBaU", percentage: 1.38 },
+    { address: "8ATF76", percentage: 1.38 },
   ];
 
   useEffect(() => {
@@ -312,6 +347,33 @@ const TokenDetail = () => {
     return parseFloat(ethAmt).toFixed(4);
   };
 
+  function scrollPageToBottom() {
+    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+  }
+
+  const handlePostComment = async (comment, file) => {
+    const formData = new FormData();
+    formData.append("comment", comment);
+    if (file) {
+      formData.append("file", file);
+    }
+
+    try {
+      const response = await fetch("/comment", {
+        method: "POST",
+        body: formData,
+      });
+      if (response.ok) {
+        // Handle successful comment post
+        console.log("Comment posted successfully");
+      } else {
+        console.error("Error posting comment");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   return (
     <div className="token-detail-page">
       <h3 className="start-new-coin" onClick={() => navigate("/")}>
@@ -320,7 +382,7 @@ const TokenDetail = () => {
 
       <div className="token-detail-content">
         <div className="token-detail-content-left">
-          <div class="tradingview-chart">
+          <div className="tradingview-chart">
             <AdvancedRealTimeChart
               theme="dark"
               autosize
@@ -344,6 +406,16 @@ const TokenDetail = () => {
             </button>
           </div>
 
+          {activeTab === "thread" && (
+            <div className="post-reply">
+              <span onClick={() => setIsModalOpen(true)} className="post">
+                [post a reply]
+              </span>
+              <span onClick={scrollPageToBottom} className="scroll">
+                [scroll to bottom]
+              </span>
+            </div>
+          )}
           {/* Tab Content */}
           {activeTab === "thread" && (
             <div className="thread-content">
@@ -370,8 +442,10 @@ const TokenDetail = () => {
                     />
                     <strong>{reply.name}</strong>
                     <span>{reply.reply_time}</span>
-                    <span className="likes"><img src={heart} alt="Icon" width="16" /> {reply.likes}</span>
-                    <span class="thread-reply-button">[reply]</span>
+                    <span className="likes">
+                      <img src={heart} alt="Icon" width="16" /> {reply.likes}
+                    </span>
+                    <span className="thread-reply-button">[reply]</span>
                   </div>
                   <div className="thread-reply-content">
                     <div>{reply.content}</div>
@@ -386,19 +460,36 @@ const TokenDetail = () => {
               <table>
                 <thead>
                   <tr>
-                    <th>Account</th>
-                    <th>Type</th>
+                    <th>account</th>
+                    <th>type</th>
                     <th>ETH</th>
                     <th>IDP</th>
-                    <th>Date</th>
-                    <th>Transaction</th>
+                    <th>date</th>
+                    <th>transaction</th>
                   </tr>
                 </thead>
                 <tbody>
                   {tradesData.map((trade, index) => (
                     <tr key={index}>
-                      <td>{trade.account}</td>
-                      <td>{trade.type}</td>
+                      <td>
+                        <div>
+                          <img
+                            src="https://pump.mypinata.cloud/ipfs/QmeSzchzEPqCU1jwTnsipwcBAeH7S4bmVvFGfF65iA1BY1?img-width=16&img-dpr=2&img-onerror=redirect"
+                            alt="User Avatar"
+                            className="user-avatar"
+                          />
+                          {trade.account}
+                        </div>
+                      </td>
+                      <td>
+                        <div
+                          className={
+                            trade.type === "buy" ? "text-green" : "text-red"
+                          }
+                        >
+                          {trade.type}
+                        </div>
+                      </td>
                       <td>{trade.eth}</td>
                       <td>{trade.idp}</td>
                       <td>{trade.date}</td>
@@ -547,11 +638,6 @@ const TokenDetail = () => {
                   "place trade"
                 )}
               </button>
-
-              {/* <label className="comment-checkbox">
-                <input type="checkbox" />
-                <span>add comment</span>
-              </label> */}
             </div>
           </div>
           <div className="token-info">
@@ -605,15 +691,15 @@ const TokenDetail = () => {
             <div className="holder-distribution">
               <div className="holder-header">
                 <h3>holder distribution</h3>
-                <button className="bubble-map-btn">generate bubble map</button>
+                {/* <button className="bubble-map-btn">generate bubble map</button> */}
               </div>
               <div className="holder-list">
-                {tokenData.holders.map((holder, index) => (
+                {holderDistributionData.map((holder, index) => (
                   <div key={index} className="holder-item">
                     <span className="holder-rank">{index + 1}.</span>
                     <span className="holder-address">{holder.address}</span>
                     {holder.holder_type === "BONDING_CURVE" && (
-                      <span className="holder-type">👑</span>
+                      <span className="holder-type">👑 (bonding curve)</span>
                     )}
                     <span className="holder-percentage">
                       {holder.percentage.toFixed(2)}%
@@ -625,6 +711,12 @@ const TokenDetail = () => {
           </div>
         </div>
       </div>
+
+      <CommentModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handlePostComment}
+      />
     </div>
   );
 };
