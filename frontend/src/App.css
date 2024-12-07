@@ -609,7 +609,7 @@ textarea.input-field {
   flex: 1;
   font-size: 20px;
   padding: 12px;
-  border-radius: 16px;
+  border-radius: .25rem;
   border: none;
   background: rgba(255, 255, 255, 0.1);
   color: #ffffff80;
@@ -722,10 +722,10 @@ textarea.input-field {
 
 /* Estimated Return */
 .estimated-return {
-  padding: 12px;
+  padding: 12px 0;
   color: #ffffff80;
   font-size: 14px;
-  text-align: center;
+  text-align: left;
 }
 
 /* Trade Button */
@@ -1698,7 +1698,19 @@ textarea.input-field {
 }
 
 .token-detail-header {
-  margin-bottom: 20px;
+  margin-bottom: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.text-green {
+  color: rgb(134 239 172);
+}
+
+.text-grey {
+  color: rgb(157 163 174);
 }
 
 .back-button {
@@ -1768,6 +1780,26 @@ textarea.input-field {
 
 .stat-item {
   margin-bottom: 15px;
+}
+
+.stat-info {
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+  position: relative;
+}
+
+.tooltip {
+  position: absolute;
+  bottom: 100%; /* Position above the element */
+  left: 10%; /* Center it horizontally */
+  transform: translateX(-50%); /* Adjust for centering */
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  z-index: 10;
+  margin-bottom: 2px; /* Space between tooltip and element */
 }
 
 .progress-bar {
@@ -1861,8 +1893,13 @@ textarea.input-field {
 
 .trade-actions {
   display: flex;
+  justify-content: space-between;
   gap: 10px;
   margin-bottom: 15px;
+}
+
+.trade-actions-right {
+  justify-content: flex-end;
 }
 
 .action-btn {
@@ -1895,6 +1932,16 @@ textarea.input-field {
   top: 50%;
   transform: translateY(-50%);
   color: #888;
+  display: flex;
+  align-items: center;
+  margin-left: .5rem;
+}
+
+.currency-label-img {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  margin-left: .5rem;
 }
 
 .quick-amounts {
@@ -1941,6 +1988,13 @@ textarea.input-field {
   padding: 10px; /* Add padding for mobile */
 }
 
+.token-detail-page-container {
+  display: flex;
+  /* justify-content: center; */
+  /* align-items: flex-start; */
+  flex-direction: column;
+}
+
 .token-detail-content {
   display: flex;
   flex-direction: column; /* Stack elements vertically on mobile */
@@ -1975,7 +2029,7 @@ textarea.input-field {
 .quick-amounts {
   display: flex;
   flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
-  justify-content: space-between; /* Space out buttons */
+  /* justify-content: space-between; Space out buttons */
 }
 
 .tradingview-widget-copyright {
@@ -2161,4 +2215,8 @@ th {
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.svg-icon {
+  fill: white; /* Change the fill color to white */
 }
