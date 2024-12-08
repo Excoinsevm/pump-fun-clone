@@ -11,6 +11,7 @@ import { useAccount, useBalance } from "wagmi";
 import { AdvancedRealTimeChart } from "react-ts-tradingview-widgets";
 import heart from "./heart.svg";
 import info from "./info.svg";
+import eth from "./eth.svg";
 import CommentModal from "./CommentModal";
 
 const TokenDetail = () => {
@@ -42,6 +43,7 @@ const TokenDetail = () => {
 
   const [holderDistributionData, setHolderDistributionData] = useState([]);
   const [repliesData, setRepliesData] = useState([]);
+  const [commentLoading, setCommentLoading] = useState(0);
 
   // Constants
   const fundingGoal = 5;
@@ -120,7 +122,7 @@ const TokenDetail = () => {
     };
 
     fetchTokenData();
-  }, [tokenAddress]);
+  }, [tokenAddress, commentLoading]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -329,25 +331,31 @@ const TokenDetail = () => {
       commentData.img_url = uploadData.url;
     }
 
-    try {
-      const response = await fetch(
-        `${CONFIG.API_URL}/tokens/${tokenAddress}/comments`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(commentData),
+    // Check if img_url is not empty before posting the comment
+    if (file && commentData.img_url || !file) {
+      try {
+        const response = await fetch(
+          `${CONFIG.API_URL}/tokens/${tokenAddress}/comments`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(commentData),
+          }
+        );
+        if (response.ok) {
+          // Handle successful comment post
+          console.log("Comment posted successfully");
+          setCommentLoading(commentLoading + 1);
+        } else {
+          console.error("Error posting comment");
         }
-      );
-      if (response.ok) {
-        // Handle successful comment post
-        console.log("Comment posted successfully");
-      } else {
-        console.error("Error posting comment");
+      } catch (error) {
+        console.error("Error:", error);
       }
-    } catch (error) {
-      console.error("Error:", error);
+    } else {
+      console.error("Image URL is empty, comment not posted.");
     }
   };
 
@@ -428,7 +436,9 @@ const TokenDetail = () => {
                       alt="User Avatar"
                       className="user-avatar"
                     />
-                    <strong>{keepFirstAndLastFourChars(tokenData.owner_address)}</strong>
+                    <strong>
+                      {keepFirstAndLastFourChars(tokenData.owner_address)}
+                    </strong>
                     <span>{tokenData.created_at.slice(0, 10)}</span>
                   </div>
                   <p>{tokenData.description}</p>
@@ -441,15 +451,26 @@ const TokenDetail = () => {
                         alt="User Avatar"
                         className="user-avatar"
                       />
-                      <strong>{keepFirstAndLastFourChars(reply.user_address)}</strong>
+                      <strong>
+                        {keepFirstAndLastFourChars(reply.user_address)}
+                      </strong>
                       <span>{reply.date_time.slice(0, 10)}</span>
                       <span className="likes">
                         <img src={heart} alt="Icon" width="16" /> {reply.likes}
                       </span>
-                      <span className="thread-reply-button">[reply]</span>
+                      {/* <span className="thread-reply-button">[reply]</span> */}
                     </div>
                     <div className="thread-reply-content">
                       <div>{reply.message}</div>
+                      {reply.img_url && (
+                        <div>
+                          <img
+                            src={reply.img_url}
+                            alt="User Avatar"
+                            className="reply-img"
+                          />
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -574,10 +595,14 @@ const TokenDetail = () => {
                   />
                   <div className="currency-label">
                     {tradeType === "buy" && useEth ? "ETH" : tokenData.symbol}
-                    <img
-                      src="https://pump.fun/_next/image?url=%2Fsolana-logo-square.png&w=64&q=75"
-                      className="currency-label-img"
-                    ></img>
+                    {tradeType === "buy" && useEth ? (
+                      <img src={eth} className="currency-label-img"></img>
+                    ) : (
+                      <img
+                        src={tokenData.logo_url}
+                        className="currency-label-img"
+                      ></img>
+                    )}
                   </div>
                 </div>
 

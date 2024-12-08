@@ -34,7 +34,7 @@ async def get_token_detail(contract_address: str, db: Session = Depends(get_db))
     # Get holder distribution
 
     holders = get_holders_by_token(db, token_id=token.id, limit=10)
-    comments = get_comments_by_token(db, token_id=token.id, limit=10)
+    comments = get_comments_by_token(db, token_id=token.id)
 
     # Calculate additional metrics
     token_detail = TokenDetailWithHolders(

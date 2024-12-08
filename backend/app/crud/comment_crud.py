@@ -11,5 +11,5 @@ def create_comment(db: Session, comment: CommentCreate):
     return db_comment
 
 
-def get_comments_by_token(db: Session, token_id: int, limit: int = 10):
-    return db.query(TokenComment).filter(TokenComment.token_id == token_id).limit(limit).all()
+def get_comments_by_token(db: Session, token_id: int):
+    return db.query(TokenComment).filter(TokenComment.token_id == token_id).all()

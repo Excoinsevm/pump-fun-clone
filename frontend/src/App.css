@@ -2123,6 +2123,12 @@ th {
   border-radius: 50%;
 }
 
+.reply-img {
+  margin-top: 5px;
+  width: 8rem;
+  /* height: 48px; */
+}
+
 .thread-reply-content {
   padding: 0.25rem;
   border-radius: 5px;
