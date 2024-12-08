@@ -125,12 +125,12 @@ const TokenCreate = () => {
       const data = await response.json();
       console.log("Token created:", data);
       
-      alert(`Transaction successful! Hash: ${receipt.blockHash}`);
-      navigate("/");
+      // alert(`Transaction successful! Hash: ${receipt.blockHash}`);
+      navigate(`/token-detail/${data.contract_address}`);
       
     } catch (error) {
       console.error("Error creating token:", error);
-      alert("Failed to create token. Please try again.");
+      // alert("Failed to create token. Please try again.");
     } finally {
       setIsLoading(false);
     }

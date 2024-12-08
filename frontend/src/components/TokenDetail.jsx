@@ -331,7 +331,7 @@ const TokenDetail = () => {
 
     try {
       const response = await fetch(
-        `${CONFIG.API_URL}/tokens/${tokenAddress}/comments/`,
+        `${CONFIG.API_URL}/tokens/${tokenAddress}/comments`,
         {
           method: "POST",
           headers: {
@@ -432,7 +432,6 @@ const TokenDetail = () => {
                     <span>{tokenData.created_at.slice(0, 10)}</span>
                   </div>
                   <p>{tokenData.description}</p>
-                  <p>this is just a test</p>
                 </div>
                 {repliesData.map((reply, index) => (
                   <div key={index} className="thread-reply">
