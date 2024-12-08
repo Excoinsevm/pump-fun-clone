@@ -18,7 +18,6 @@ const CommentModal = ({ isOpen, onClose, onSubmit }) => {
     e.preventDefault();
     const newErrors = {};
     if (!comment.trim()) newErrors.comment = "Comment is required";
-    if (!file) newErrors.file = "Image is required";
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -37,35 +36,6 @@ const CommentModal = ({ isOpen, onClose, onSubmit }) => {
   }, [isOpen]);
 
   if (!isOpen) return null;
-
-  //   const handleDrag = useCallback((e) => {
-  //     e.preventDefault();
-  //     e.stopPropagation();
-  //   }, []);
-
-  //   const handleDragIn = useCallback((e) => {
-  //     e.preventDefault();
-  //     e.stopPropagation();
-  //     setIsDragging(true);
-  //   }, []);
-
-  //   const handleDragOut = useCallback((e) => {
-  //     e.preventDefault();
-  //     e.stopPropagation();
-  //     setIsDragging(false);
-  //   }, []);
-
-  //   const handleDrop = useCallback((e) => {
-  //     e.preventDefault();
-  //     e.stopPropagation();
-  //     setIsDragging(false);
-  //     setErrors({ ...errors, file: "" });
-
-  //     const files = e.dataTransfer.files;
-  //     if (files && files.length > 0) {
-  //       setFile(files[0]);
-  //     }
-  //   }, []);
 
   return (
     <div className="modal-overlay">

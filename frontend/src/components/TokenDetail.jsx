@@ -40,6 +40,9 @@ const TokenDetail = () => {
   const [ethReserve, setEthReserve] = useState(0);
   const [tokenReserve, setTokenReserve] = useState(0);
 
+  const [holderDistributionData, setHolderDistributionData] = useState([]);
+  const [repliesData, setRepliesData] = useState([]);
+
   // Constants
   const fundingGoal = 5;
   const maxSupply = parseInt(1_000_000_000);
@@ -79,72 +82,21 @@ const TokenDetail = () => {
   ];
 
   // Sample replies data
-  const repliesData = [
-    // {
-    //   avatar:
-    //     "https://pump.mypinata.cloud/ipfs/QmeSzchzEPqCU1jwTnsipwcBAeH7S4bmVvFGfF65iA1BY1?img-width=16&img-dpr=2&img-onerror=redirect",
-    //   name: "DDKrich",
-    //   reply_time: "2:04:05 PM",
-    //   likes: 7,
-    //   content: "seems legit",
-    // },
-    // {
-    //   avatar:
-    //     "https://pump.mypinata.cloud/ipfs/QmeSzchzEPqCU1jwTnsipwcBAeH7S4bmVvFGfF65iA1BY1?img-width=16&img-dpr=2&img-onerror=redirect",
-    //   name: "dh8c4",
-    //   reply_time: "2:06:14 PM",
-    //   likes: 7,
-    //   content: "sound legit for me",
-    // },
-    // {
-    //   avatar:
-    //     "https://pump.mypinata.cloud/ipfs/QmeSzchzEPqCU1jwTnsipwcBAeH7S4bmVvFGfF65iA1BY1?img-width=16&img-dpr=2&img-onerror=redirect",
-    //   name: "WARBUCKS",
-    //   reply_time: "2:11:12 PM",
-    //   likes: 5,
-    //   content: "Take my money",
-    // },
-    // {
-    //   avatar:
-    //     "https://pump.mypinata.cloud/ipfs/QmeSzchzEPqCU1jwTnsipwcBAeH7S4bmVvFGfF65iA1BY1?img-width=16&img-dpr=2&img-onerror=redirect",
-    //   name: "jrjubilium",
-    //   reply_time: "2:13:40 PM",
-    //   likes: 5,
-    //   content: "nice top holder trimmed sendor",
-    // },
-    // {
-    //   avatar:
-    //     "https://pump.mypinata.cloud/ipfs/QmeSzchzEPqCU1jwTnsipwcBAeH7S4bmVvFGfF65iA1BY1?img-width=16&img-dpr=2&img-onerror=redirect",
-    //   name: "7NRvsk",
-    //   reply_time: "2:15:12 PM",
-    //   likes: 5,
-    //   content: "5% out",
-    // },
-  ];
+  // const repliesData = [
+  //   {
+  //     avatar:
+  //       "https://pump.mypinata.cloud/ipfs/QmeSzchzEPqCU1jwTnsipwcBAeH7S4bmVvFGfF65iA1BY1?img-width=16&img-dpr=2&img-onerror=redirect",
+  //     name: "DDKrich",
+  //     reply_time: "2:04:05 PM",
+  //     likes: 7,
+  //     content: "seems legit",
+  //   },
+  // ];
 
   // Sample holder distribution data
-  const holderDistributionData = [
-    { address: "9qP5Uv", percentage: 29.5, holder_type: "BONDING_CURVE" },
-    // { address: "C4dUZB", percentage: 2.45 },
-    // { address: "Hr8JVp", percentage: 2.16 },
-    // { address: "9ER2KU", percentage: 2.07 },
-    // { address: "A4Zmko", percentage: 1.91 },
-    // { address: "GpJSc5", percentage: 1.88 },
-    // { address: "GuLeBH", percentage: 1.83 },
-    // { address: "GmAmTk", percentage: 1.81 },
-    // { address: "5nFoxC", percentage: 1.76 },
-    // { address: "6EtpaF", percentage: 1.74 },
-    // { address: "9ieq7B", percentage: 1.7 },
-    // { address: "E9Hj79", percentage: 1.65 },
-    // { address: "7pfi6t", percentage: 1.63 },
-    // { address: "7Ts8Uj", percentage: 1.62 },
-    // { address: "EU8vyG", percentage: 1.52 },
-    // { address: "GUx2Ww", percentage: 1.46 },
-    // { address: "4bdEcZ", percentage: 1.42 },
-    // { address: "8VARYw", percentage: 1.4 },
-    // { address: "88zBaU", percentage: 1.38 },
-    // { address: "8ATF76", percentage: 1.38 },
-  ];
+  // const holderDistributionData = [
+  //   { address: "9qP5Uv", percentage: 29.5, holder_type: "BONDING_CURVE" },
+  // ];
 
   useEffect(() => {
     const fetchTokenData = async () => {
@@ -158,6 +110,8 @@ const TokenDetail = () => {
           "https://ipfs.io/ipfs/"
         );
         setTokenData(data);
+        setHolderDistributionData(data.holders);
+        setRepliesData(data.comments);
       } catch (error) {
         console.error("Error fetching token data:", error);
       } finally {
@@ -356,17 +310,36 @@ const TokenDetail = () => {
   }
 
   const handlePostComment = async (comment, file) => {
-    const formData = new FormData();
-    formData.append("comment", comment);
+    let commentData = {
+      message: comment,
+      user_address: signer._address,
+      token_id: tokenData.id,
+    };
+
     if (file) {
-      formData.append("file", file);
+      // First, upload the file
+      const uploadFormData = new FormData();
+      uploadFormData.append("file", file);
+
+      const uploadResponse = await fetch(`${CONFIG.API_URL}/upload/`, {
+        method: "POST",
+        body: uploadFormData,
+      });
+      const uploadData = await uploadResponse.json();
+      commentData.img_url = uploadData.url;
     }
 
     try {
-      const response = await fetch("/comment", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        `${CONFIG.API_URL}/tokens/${tokenAddress}/comments/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(commentData),
+        }
+      );
       if (response.ok) {
         // Handle successful comment post
         console.log("Comment posted successfully");
@@ -377,6 +350,13 @@ const TokenDetail = () => {
       console.error("Error:", error);
     }
   };
+
+  function keepFirstAndLastFourChars(str) {
+    if (str.length <= 8) {
+      return str; // Return the original string if it's 8 characters or less
+    }
+    return str.slice(0, 8) + "..." + str.slice(-6); // Concatenate first 4 and last 4 characters
+  }
 
   return (
     <div className="token-detail-page">
@@ -448,29 +428,29 @@ const TokenDetail = () => {
                       alt="User Avatar"
                       className="user-avatar"
                     />
-                    <strong>name</strong>
-                    <span>12/1/2024, 2:00:18 PM</span>
+                    <strong>{keepFirstAndLastFourChars(tokenData.owner_address)}</strong>
+                    <span>{tokenData.created_at.slice(0, 10)}</span>
                   </div>
-                  <p>just a test (test)</p>
+                  <p>{tokenData.description}</p>
                   <p>this is just a test</p>
                 </div>
                 {repliesData.map((reply, index) => (
                   <div key={index} className="thread-reply">
                     <div className="thread-reply-header">
                       <img
-                        src={reply.avatar}
+                        src="https://pump.mypinata.cloud/ipfs/QmeSzchzEPqCU1jwTnsipwcBAeH7S4bmVvFGfF65iA1BY1?img-width=16&img-dpr=2&img-onerror=redirect"
                         alt="User Avatar"
                         className="user-avatar"
                       />
-                      <strong>{reply.name}</strong>
-                      <span>{reply.reply_time}</span>
+                      <strong>{keepFirstAndLastFourChars(reply.user_address)}</strong>
+                      <span>{reply.date_time.slice(0, 10)}</span>
                       <span className="likes">
                         <img src={heart} alt="Icon" width="16" /> {reply.likes}
                       </span>
                       <span className="thread-reply-button">[reply]</span>
                     </div>
                     <div className="thread-reply-content">
-                      <div>{reply.content}</div>
+                      <div>{reply.message}</div>
                     </div>
                   </div>
                 ))}
@@ -786,7 +766,9 @@ const TokenDetail = () => {
                   {holderDistributionData.map((holder, index) => (
                     <div key={index} className="holder-item">
                       <span className="holder-rank">{index + 1}.</span>
-                      <span className="holder-address">{holder.address}</span>
+                      <span className="holder-address">
+                        {keepFirstAndLastFourChars(holder.address)}
+                      </span>
                       {holder.holder_type === "BONDING_CURVE" && (
                         <span className="holder-type">👑 (bonding curve)</span>
                       )}

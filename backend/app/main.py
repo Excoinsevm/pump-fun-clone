@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routes import token_routes, holder_routes, transaction_routes, comment_routes, upload_routes
+from app.routes import token_routes, transaction_routes, comment_routes, upload_routes
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Token Management API", version="1.0.0")
@@ -16,7 +16,6 @@ app.add_middleware(
 
 # Include routers
 app.include_router(token_routes.router, prefix="/tokens", tags=["Tokens"])
-app.include_router(holder_routes.router, prefix="/holders", tags=["Holders"])
 app.include_router(transaction_routes.router, prefix="/transactions", tags=["Transactions"])
 app.include_router(comment_routes.router, prefix="/comments", tags=["Comments"])
 app.include_router(upload_routes.router, prefix="/upload", tags=["File Upload"])

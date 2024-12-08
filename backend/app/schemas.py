@@ -3,22 +3,74 @@ from datetime import datetime
 from typing import Optional, List
 
 
+# create
+
+
+class TokenCreate(BaseModel):
+    name: str
+    symbol: str
+    description: str
+    owner_address: str
+    contract_address: str
+    logo_url: str
+    telegram_url: Optional[str]
+    twitter_url: Optional[str]
+    website: Optional[str]
+
+
+class HolderCreate(BaseModel):
+    token_id: int
+    address: str
+    balance: float
+    holder_type: str
+
+
 class TokenHolder(BaseModel):
     address: str
     balance: float
-    percentage: float
+    percentage: float = 0
     holder_type: str  # "BONDING_CURVE", "CREATOR", "NORMAL_USER"
 
     class Config:
         from_attributes = True
 
 
+class TokenComment(BaseModel):
+    id: int
+    token_id: int
+    user_address: str
+    message: str
+    img_url: Optional[str] = None
+    date_time: datetime
+
+    class Config:
+        orm_mode = True
+
+
 class TokenDetail(BaseModel):
+    id: int
     name: str
     symbol: str
     description: str
-    contract_address: str
     owner_address: str
+    contract_address: str
+    logo_url: str
+    twitter_url: Optional[str] = None
+    telegram_url: Optional[str] = None
+    website: Optional[str] = None
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class TokenDetailWithHolders(BaseModel):
+    id: int
+    name: str
+    symbol: str
+    description: str
+    owner_address: str
+    contract_address: str
     logo_url: str
     twitter_url: Optional[str] = None
     telegram_url: Optional[str] = None
@@ -33,6 +85,7 @@ class TokenDetail(BaseModel):
     # real_token_reserves: float
     # total_supply: float
     holders: List[TokenHolder]
+    comments: List[TokenComment]
 
     class Config:
         from_attributes = True
@@ -56,34 +109,6 @@ class TransactionResponse(BaseModel):
         orm_mode = True
 
 
-class CommentResponse(BaseModel):
-    id: int
-    token_id: int
-    user_address: str
-    message: str
-    date_time: datetime
-
-    class Config:
-        orm_mode = True
-
-
-class TokenCreate(BaseModel):
-    name: str
-    symbol: str
-    description: str
-    owner_address: str
-    contract_address: str
-    logo_url: str
-    website: Optional[str]
-    telegram_url: Optional[str]
-    twitter_url: Optional[str]
-
-
-class HolderCreate(BaseModel):
-
-    id: int
-
-
 class HolderResponse(BaseModel):
     id: int
 
@@ -95,4 +120,7 @@ class TransactionCreate(BaseModel):
 
 class CommentCreate(BaseModel):
 
-    id: int
+    token_id: int
+    user_address: str
+    message: str
+    img_url: Optional[str] = None

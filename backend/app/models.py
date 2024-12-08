@@ -14,6 +14,7 @@ from sqlalchemy.sql import func
 
 Base = declarative_base()
 
+
 # Token Model
 class Token(Base):
     __tablename__ = "tokens"
@@ -30,7 +31,7 @@ class Token(Base):
     decimals = Column(Integer, default=18)
     status = Column(String, nullable=True)
     active = Column(Boolean, default=True)
-    total_supply = Column(Float, nullable=True)
+    total_supply = Column(Integer, nullable=True)
     market_cap = Column(Float, nullable=True)
     price_in_trx = Column(Float, nullable=True)
     volume_24hr = Column(Float, nullable=True)
@@ -50,8 +51,7 @@ class TokenHolder(Base):
     id = Column(Integer, primary_key=True)
     token_id = Column(Integer, ForeignKey("tokens.id"), nullable=False)
     address = Column(String, nullable=False)
-    balance = Column(Float, nullable=False)
-    percentage = Column(Float, nullable=False)
+    balance = Column(Integer, nullable=False)
     holder_type = Column(String, nullable=False)
 
     # Relationships
@@ -67,9 +67,9 @@ class TokenTransaction(Base):
     txn_order_type = Column(String, nullable=False)  # BUY or SELL
     from_token_address = Column(String, nullable=False)
     to_token_address = Column(String, nullable=False)
-    from_token_amount = Column(Float, nullable=False)
-    to_token_amount = Column(Float, nullable=False)
-    fee = Column(Float, nullable=False)
+    from_token_amount = Column(Integer, nullable=False)
+    to_token_amount = Column(Integer, nullable=False)
+    fee = Column(Integer, nullable=False)
     tx_hash = Column(String, nullable=False, unique=True)
     block_num = Column(Integer, nullable=False)
     tx_date_time = Column(DateTime, nullable=False)
@@ -85,6 +85,7 @@ class TokenComment(Base):
     token_id = Column(Integer, ForeignKey("tokens.id"), nullable=False)
     user_address = Column(String, nullable=False)
     message = Column(Text, nullable=False)
+    img_url = Column(String, nullable=True)
     date_time = Column(DateTime, default=func.now())
 
     # Relationships
