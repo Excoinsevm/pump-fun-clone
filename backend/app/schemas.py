@@ -16,6 +16,7 @@ class TokenCreate(BaseModel):
     telegram_url: Optional[str]
     twitter_url: Optional[str]
     website: Optional[str]
+    total_supply: Optional[int] = 800_000_000
 
 
 class HolderCreate(BaseModel):
