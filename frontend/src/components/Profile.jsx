@@ -7,12 +7,6 @@ const Profile = () => {
   
   const tabs = ['coins held', 'replies', 'notifications', 'coins created', 'followers', 'following'];
 
-  const mockCoins = [
-    { id: '217047', name: 'DRPEPE', amount: '0.0061 SOL', image: 'https://pump.fun/logo.png' },
-    { id: '174569', name: 'SOUL', amount: '0.0052 SOL', image: 'https://pump.fun/logo.png' },
-    // ... add more mock data as needed
-  ];
-
   return (
     <div className="profile-container">
       {/* Profile Header */}
