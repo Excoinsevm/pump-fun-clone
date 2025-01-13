@@ -2,7 +2,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import Main from "./components/Main";
 import { http, createConfig } from "wagmi";
-import { sepolia } from "wagmi/chains";
+import { bitrock } from "./chain.js";
 import { WagmiProvider } from "wagmi";
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -14,11 +14,11 @@ const projectId = "4265189f60ad0e1a606df6152e4e2ca0";
 const config = createConfig(
   getDefaultConfig({
     // Your dApps chains
-    chains: [sepolia],
+    chains: [bitrock],
     connectors: [injected()],
     transports: {
       // RPC URL for each chain
-      [sepolia.id]: http(CONFIG.RPC_URL),
+      [bitrock.id]: http(CONFIG.RPC_URL),
     },
     // Required API Keys
     walletConnectProjectId: projectId,
