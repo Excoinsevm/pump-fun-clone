@@ -1,6 +1,6 @@
 import {defineChain} from 'viem';
 
-export const ChainId = defineChain({
+export const bitrock = defineChain({
     "name": "Bitrock",
     "id": 7171,
     "nativeCurrency": {
